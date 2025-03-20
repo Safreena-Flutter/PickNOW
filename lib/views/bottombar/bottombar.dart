@@ -131,15 +131,16 @@ class _BottomBarState extends State<BottomBar> {
                                     ),
                                     buildAnimatedIconButton(
                                       Icons.favorite_border,
-                                     // badge: '3',
+                                      // badge: '3',
                                       onPressed: () {
-                                        PageNavigations().push(WishlistPage());
+                                        PageNavigations()
+                                            .push(WishlistScreen());
                                       },
                                     ),
                                     buildAnimatedIconButton(
                                       Icons.notifications_none_outlined,
                                       onPressed: () {},
-                                     // badge: '3',
+                                      // badge: '3',
                                     ),
                                   ],
                                 ),

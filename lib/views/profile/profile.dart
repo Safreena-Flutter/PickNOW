@@ -59,20 +59,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               IconButton(
                   onPressed: () {
-                    PageNavigations().push(WishlistPage());
+                    PageNavigations().push(WishlistScreen());
                   },
                   icon: Icon(Icons.favorite_border)),
-             Consumer<CartProvider>(
-                                      builder: (_, cart, __) =>
-                                          buildAnimatedIconButton(
-                                        Icons.shopping_cart_outlined,
-                                        badge: cart.itemCount.toString(),
-                                        onPressed: () {
-                                          PageNavigations().push(
-                                              ShoppingCart(isfromhome: true));
-                                        },
-                                      ),
-                                    ),
+              Consumer<CartProvider>(
+                builder: (_, cart, __) => buildAnimatedIconButton(
+                  Icons.shopping_cart_outlined,
+                  badge: cart.itemCount.toString(),
+                  onPressed: () {
+                    PageNavigations().push(ShoppingCart(isfromhome: true));
+                  },
+                ),
+              ),
             ],
           )
         ],

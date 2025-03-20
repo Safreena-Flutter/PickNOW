@@ -82,9 +82,8 @@ class _ShoppingCartState extends State<ShoppingCart> {
     double subtotal = cartProvider.cart?.items
             .fold(0, (sum, item) => sum! + (item.price * item.quantity)) ??
         0;
-    double tax = subtotal * 0.04; 
-    double deliveryCharge =
-        subtotal > 500 ? 0 : 50;
+    double tax = subtotal * 0.04;
+    double deliveryCharge = subtotal > 500 ? 0 : 50;
     double total = subtotal + tax + deliveryCharge;
     return Scaffold(
       appBar: AppBar(
@@ -114,7 +113,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                   icon: Icon(Icons.search)),
               IconButton(
                   onPressed: () {
-                    PageNavigations().push(WishlistPage());
+                    PageNavigations().push(WishlistScreen());
                   },
                   icon: Icon(Icons.favorite_border))
             ],

@@ -62,7 +62,7 @@ class _CategoryPageState extends State<CategoryPage> {
           IconButton(
             icon: const Icon(Icons.favorite_border),
             onPressed: () {
-              PageNavigations().push(WishlistPage());
+              PageNavigations().push(WishlistScreen());
             },
           ),
           Consumer<CartProvider>(

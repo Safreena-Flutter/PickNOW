@@ -191,7 +191,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                         children: [
                           IconButton(
                               onPressed: () {
-                                PageNavigations().push(WishlistPage());
+                                PageNavigations().push(WishlistScreen());
                               },
                               icon: Icon(
                                 Icons.favorite_border,
@@ -199,7 +199,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                               )),
                           IconButton(
                               onPressed: () {
-                                //   PageNavigations().push(WishlistPage());
+                                //   PageNavigations().push(WishlistScreen());
                               },
                               icon: Icon(
                                 Icons.share,
