@@ -32,12 +32,10 @@ Widget buildCartContent(CartProvider cartProvider,BuildContext context, double s
                         onDismissed: (direction) {
                           cartProvider.removeItem(index);
                           ScaffoldMessenger.of(context).showSnackBar(
+                            
                             SnackBar(
+                              backgroundColor: Colors.red,
                               content: Text('${item.name} removed from cart'),
-                              action: SnackBarAction(
-                                label: 'UNDO',
-                                onPressed: () => cartProvider.loadCart(),
-                              ),
                               behavior: SnackBarBehavior.floating,
                             ),
                           );
@@ -112,7 +110,7 @@ Widget buildCartContent(CartProvider cartProvider,BuildContext context, double s
                                       Row(
                                         children: [
                                           Text(
-                                            '₹${item.price}',
+                                            '₹${(item.price * item.quantity) }',
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,

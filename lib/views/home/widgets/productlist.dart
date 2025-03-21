@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:picknow/core/costants/mediaquery/mediaquery.dart';
 import 'package:picknow/core/costants/navigation/navigation.dart';
 import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:provider/provider.dart';
 
+import '../../../providers/whishlist/whishlist_provider.dart';
 import '../../products/detailed_page.dart';
 
 class FeaturedProductsList extends StatelessWidget {
@@ -16,7 +18,7 @@ class FeaturedProductsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: from == true
-          ? mediaqueryheight(0.330, context)
+          ? mediaqueryheight(0.332, context)
           : mediaqueryheight(0.37, context),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -96,11 +98,36 @@ class ProductCard extends StatelessWidget {
                   Positioned(
                     top: 8,
                     right: 8,
-                    child: IconButton(
-                      icon: Icon(Icons.favorite,
-                          size: 30, color: AppColors.grey.withOpacity(0.6)),
-                      onPressed: () {},
-                    ),
+                    child:  Consumer<WishlistProvider>(
+                            builder: (context, wishlistProvider, child) {
+                              bool isWishlisted =
+                                  wishlistProvider.isWishlisted(id);
+                              bool isLoading = wishlistProvider.isLoading(id); // Get loading state for this product
+
+                              return GestureDetector(
+                                onTap: () {
+                                  wishlistProvider.toggleWishlist(id);
+                                },
+                                child: isLoading
+                                    ? const SizedBox(
+                                        width: 24,
+                                        height: 24,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Icon(
+                                        isWishlisted
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: isWishlisted
+                                            ? Colors.red
+                                            : Colors.white,
+                                      ),
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),

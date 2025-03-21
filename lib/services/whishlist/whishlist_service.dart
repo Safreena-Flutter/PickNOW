@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/whishlist/whishlist_model.dart';
@@ -20,8 +21,6 @@ class WishlistService {
           'Authorization': 'Bearer $token',
         },);
       
-      print('*** ${response.statusCode}');
-      print('*** ${response.body}');
       if (response.statusCode == 200) {
         return WishlistModel.fromJson(json.decode(response.body));
       } else {
@@ -56,7 +55,7 @@ class WishlistService {
         }
       }
     } catch (e) {
-      print("Error fetching wishlist: $e");
+      debugPrint("Error fetching wishlist: $e");
     }
     return [];
   }

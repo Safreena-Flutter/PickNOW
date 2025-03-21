@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:picknow/views/cart/my_cart.dart';
 import 'package:picknow/views/search/search_screen.dart';
-
 import '../../core/costants/navigation/navigation.dart';
 import '../wishlist/wishlist.dart';
 

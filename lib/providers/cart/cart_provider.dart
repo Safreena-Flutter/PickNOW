@@ -1,6 +1,9 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:picknow/model/cart/cart_model.dart';
 import '../../services/cart/cart_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CartProvider with ChangeNotifier {
   CartModel? _cart;
@@ -10,7 +13,7 @@ class CartProvider with ChangeNotifier {
   CartModel? get cart => _cart;
   bool get isLoading => _isLoading;
 int get itemCount {
-    return _cart?.items.length ?? 0; // Returns 0 if cart is null
+    return _cart?.items.length ?? 0;
   }
   Future<void> loadCart() async {
     _isLoading = true;
@@ -32,7 +35,15 @@ int get itemCount {
     if (newCartItem != null) {
       _cart?.items.add(newCartItem);
       notifyListeners();
+       Fluttertoast.showToast(
+          msg: "Product added to cart",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
     }
+
   }
 
   Future<void> updateQuantity(int index, int newQuantity) async {

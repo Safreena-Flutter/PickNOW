@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:picknow/core/costants/theme/appcolors.dart';
 import 'package:provider/provider.dart';
+import '../../providers/cart/cart_provider.dart';
 import '../../providers/whishlist/whishlist_provider.dart';
 
 class WishlistScreen extends StatefulWidget {
@@ -30,7 +30,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
       ),
       body: Consumer<WishlistProvider>(
         builder: (context, wishlistProvider, child) {
-          if (wishlistProvider.isLoad) {
+          if (wishlistProvider.isLoadingProducts) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -44,8 +44,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
               itemCount: wishlistProvider.wishlist.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 6,
                 childAspectRatio: 0.7,
               ),
               itemBuilder: (context, index) {
@@ -54,7 +54,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 return Card(
                   color: AppColors.whiteColor,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   elevation: 1,
                   child: Column(
@@ -62,7 +62,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     children: [
                       Expanded(
                         child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(8)),
                           child: Image.network(
                             product.image,
                             width: double.infinity,
@@ -71,7 +72,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0,right: 8,top: 8),
+                        padding:
+                            const EdgeInsets.only(left: 8.0, right: 8, top: 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -79,32 +81,42 @@ class _WishlistScreenState extends State<WishlistScreen> {
                               product.name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 13),
                             ),
-                          
                             const SizedBox(height: 5),
                             Text(
                               "₹${product.price}",
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
                             ),
                           ],
                         ),
                       ),
                       Row(
-                      
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
+                            icon: const Icon(Icons.delete_outline_rounded,
+                                color: Colors.red),
                             onPressed: () {
-                              // Provider.of<WishlistProvider>(context, listen: false)
-                              //     .removeFromWishlist(product.id);
+                              Provider.of<WishlistProvider>(context,
+                                      listen: false)
+                                  .removeFromWishlist(product.id);
                             },
                           ),
-                         
                           ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(Icons.shopping_bag, color: Colors.white, size: 18),
-                            label: const Text("Add to Bag"),
+                            onPressed: () {
+                              Provider.of<CartProvider>(context, listen: false)
+                                  .addToCart(
+                                product.id,
+                                1,
+                              );
+                            },
+                            icon: const Icon(Icons.shopping_bag,
+                                color: Colors.white, size: 18),
+                            label: Text("Add to Cart",
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.bold)),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.orange,
                               foregroundColor: Colors.white,

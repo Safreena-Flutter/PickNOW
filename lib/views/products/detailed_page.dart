@@ -2,9 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
 import 'package:picknow/core/utils/convert_date.dart';
-import 'package:picknow/views/wishlist/wishlist.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart/cart_provider.dart';
 import '../../providers/combo/combo_provider.dart';
@@ -12,6 +10,7 @@ import '../../providers/product/product_detail_provider.dart';
 import '../../core/costants/theme/appcolors.dart';
 import '../../providers/product/related_products.dart';
 import '../../providers/reviewproviders/review_provider.dart';
+import '../../providers/whishlist/whishlist_provider.dart';
 import '../home/widgets/productlist.dart';
 import '../widgets/customappbar.dart';
 import 'widget/product_detailwidget.dart';
@@ -189,14 +188,38 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                       ),
                       Row(
                         children: [
-                          IconButton(
-                              onPressed: () {
-                                PageNavigations().push(WishlistScreen());
-                              },
-                              icon: Icon(
-                                Icons.favorite_border,
-                                color: AppColors.grey,
-                              )),
+                          Consumer<WishlistProvider>(
+                            builder: (context, wishlistProvider, child) {
+                              bool isWishlisted =
+                                  wishlistProvider.isWishlisted(product.id);
+                              bool isLoading = wishlistProvider.isLoading(product
+                                  .id); // Get loading state for this product
+
+                              return GestureDetector(
+                                onTap: () {
+                                  wishlistProvider.toggleWishlist(product.id);
+                                  
+                                },
+                                child: isLoading
+                                    ? const SizedBox(
+                                        width: 24,
+                                        height: 24,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Icon(
+                                        isWishlisted
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: isWishlisted
+                                            ? Colors.red
+                                            : Colors.grey,
+                                      ),
+                              );
+                            },
+                          ),
                           IconButton(
                               onPressed: () {
                                 //   PageNavigations().push(WishlistScreen());

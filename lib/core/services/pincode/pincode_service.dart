@@ -18,6 +18,7 @@ class PincodeService {
           return {
             'city': postOffice['District'],
             'state': postOffice['State'],
+            'country':postOffice['Country']
           };
         } else {
           throw Exception('Pincode not found');

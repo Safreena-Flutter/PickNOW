@@ -3,9 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:picknow/views/widgets/custombutton.dart';
 import 'package:picknow/views/widgets/customtext.dart';
+import 'package:provider/provider.dart';
 import '../../core/costants/navigation/navigation.dart';
 import '../../core/costants/theme/appcolors.dart';
 import '../../core/services/pincode/pincode_service.dart';
+import '../../model/address/address.dart';
+import '../../providers/cart/address_provider.dart';
+import '../../providers/profile/userprofile_provider.dart';
 
 class AddressScreen extends StatefulWidget {
   final String currentAddress;
@@ -17,8 +21,11 @@ class AddressScreen extends StatefulWidget {
   _AddressScreenState createState() => _AddressScreenState();
 }
 
+enum AddressType { home, work }
+
 class _AddressScreenState extends State<AddressScreen> {
   bool _showAddressForm = false;
+    final _formKey = GlobalKey<FormState>();
   final TextEditingController _pincodeController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -26,11 +33,20 @@ class _AddressScreenState extends State<AddressScreen> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _houesnoController = TextEditingController();
   final TextEditingController _colornyController = TextEditingController();
+  AddressType _selectedAddressType = AddressType.home;
 
   @override
   void initState() {
     _pincodeController.addListener(_fetchCityState);
     super.initState();
+
+    Future.delayed(Duration.zero, () {
+      final user = Provider.of<ProfileProvider>(context, listen: false).user;
+      if (user != null) {
+        _nameController.text = user.name;
+        _phoneController.text = user.contact;
+      }
+    });
   }
 
   @override
@@ -54,9 +70,12 @@ class _AddressScreenState extends State<AddressScreen> {
       try {
         final result = await PincodeService.getCityState(pincode);
         setState(() {
-          // Update the city and state controllers with fetched data
-          _cityController.text = result['city'] ?? 'Not found';
-          _stateController.text = result['state'] ?? 'Not found';
+          String district = result['city'] ?? 'Not found';
+          String state = result['state'] ?? 'Not found';
+          String country = result['country'] ?? 'Not found';
+
+          // Combine State and Country
+          _stateController.text = "$district, $state, $country";
         });
       } catch (e) {
         setState(() {
@@ -78,22 +97,31 @@ class _AddressScreenState extends State<AddressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<ProfileProvider>(context);
+    final addressProvider = Provider.of<AddressProvider>(context);
     return Scaffold(
-      appBar: widget.isfromhome ? AppBar( automaticallyImplyLeading: false,
-          leading:  IconButton(
-                onPressed: () {
-                  PageNavigations().pop();
-                },
-                icon: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: AppColors.lightgrey),
-                    child: Icon(
-                      Icons.arrow_back_ios_rounded,
-                      size: 20,
-                    ))),
-          title:CustomText(text: 'My Addresses', size: 0.035, color: AppColors.blackColor),
-          centerTitle: true,) : null,
+      appBar: widget.isfromhome
+          ? AppBar(
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                  onPressed: () {
+                    PageNavigations().pop();
+                  },
+                  icon: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: AppColors.lightgrey),
+                      child: Icon(
+                        Icons.arrow_back_ios_rounded,
+                        size: 20,
+                      ))),
+              title: CustomText(
+                  text: 'My Addresses',
+                  size: 0.035,
+                  color: AppColors.blackColor),
+              centerTitle: true,
+            )
+          : null,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -131,23 +159,27 @@ class _AddressScreenState extends State<AddressScreen> {
                     Row(
                       children: [
                         widget.isfromhome
-                        ? SizedBox.shrink()
-                       : Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Address Selected")),
-                              );
-                            },
-                            icon: Icon(Icons.check,color: AppColors.whiteColor,),
-                            label: Text("Use This Address"),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(vertical: 12),
-                            ),
-                          ),
-                        ),
+                            ? SizedBox.shrink()
+                            : Expanded(
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text("Address Selected")),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.check,
+                                    color: AppColors.whiteColor,
+                                  ),
+                                  label: Text("Use This Address"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    foregroundColor: Colors.white,
+                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                ),
+                              ),
                         SizedBox(width: 10),
                         Expanded(
                           child: OutlinedButton.icon(
@@ -174,7 +206,8 @@ class _AddressScreenState extends State<AddressScreen> {
               SizedBox(height: 20),
 
               // Address Form (Only shown when "Add New Address" is tapped)
-              if (_showAddressForm) buildAddressForm(),
+              if (_showAddressForm)
+                buildAddressForm(userProvider, addressProvider,),
             ],
           ),
         ),
@@ -182,7 +215,8 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
-  Widget buildAddressForm() {
+  Widget buildAddressForm(
+      ProfileProvider userProvider, AddressProvider addressprovider) {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -197,52 +231,114 @@ class _AddressScreenState extends State<AddressScreen> {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Enter New Address",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          buildTextField(
-              "Full Name", TextInputType.text, _nameController),
-          SizedBox(height: 10),
-          buildTextField("Phone Number",TextInputType.phone,
-              _phoneController),
-          SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                  child: buildTextField("Pincode",
-                      TextInputType.number, _pincodeController)),
-              SizedBox(width: 10),
-              Expanded(
-                  child: buildTextField("District",
-                      TextInputType.text, _cityController)),
-            ],
-          ),
-          SizedBox(height: 10),
-          buildTextField(
-              "State", TextInputType.text, _stateController),
-          SizedBox(height: 10),
-          buildTextField("House No.,Building Name", 
-              TextInputType.streetAddress, _houesnoController,
-              maxLines: 2),
-          SizedBox(height: 10),
-          buildTextField("Road Name,Area,Colony",
-              TextInputType.text, _colornyController,
-              maxLines: 2),
-          SizedBox(height: 10),
-          SizedBox(height: 20),
-          Center(
-            child: CustomElevatedButton(
-              onPressed: () {},
-              text: "Save Address",
-              textColor: AppColors.whiteColor,
+      child: Form(
+        key:_formKey ,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Enter New Address",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-          ),
-        ],
+            SizedBox(height: 10),
+        
+            // Full Name Field
+            buildTextField(
+              "Full Name",
+              TextInputType.text,
+              _nameController,
+            ),
+            SizedBox(height: 10),
+        
+            // Phone Number Field
+            buildTextField(
+              "Phone Number",
+              TextInputType.phone,
+              _phoneController,
+            ),
+            SizedBox(height: 10),
+        
+            // Pincode & District Fields
+            Row(
+              children: [
+                Expanded(
+                  child: buildTextField(
+                      "Pincode", TextInputType.number, _pincodeController),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child:
+                      buildTextField("City", TextInputType.text, _cityController),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+        
+            buildTextField(
+                "District, State", TextInputType.text, _stateController),
+            SizedBox(height: 10),
+        
+            buildTextField(
+              "Street, Road Name, Area, Colony",
+              TextInputType.text,
+              _colornyController,
+              maxLines: 2,
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Radio<AddressType>(
+                  value: AddressType.work,
+                  groupValue: _selectedAddressType,
+                  fillColor: MaterialStateProperty.all(AppColors.orange),
+                  onChanged: (AddressType? value) {
+                    setState(() {
+                      _selectedAddressType = value!;
+                    });
+                  },
+                ),
+                Text("Work"),
+                SizedBox(width: 10),
+                Radio<AddressType>(
+                  value: AddressType.home,
+                  groupValue: _selectedAddressType,
+                  fillColor: MaterialStateProperty.all(AppColors.orange),
+                  onChanged: (AddressType? value) {
+                    setState(() {
+                      _selectedAddressType = value!;
+                    });
+                  },
+                ),
+                Text("Home"),
+              ],
+            ),
+        
+            SizedBox(height: 20),
+        
+            // Save Address Button
+            Center(
+              child: addressprovider.isPosting
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          Address newAddress = Address(
+                            type: "Home",
+                            street: "kk Nagar",
+                            city: "MATTU",
+                            state: _stateController.text,
+                            pincode:'643212',
+                            country: 'India',
+                          );
+                          addressprovider.submitAddress(newAddress);
+                        }
+                      },
+                      child: Text("Submit Address"),
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -258,7 +354,7 @@ class _AddressScreenState extends State<AddressScreen> {
         labelStyle: TextStyle(color: AppColors.grey),
         border:
             OutlineInputBorder(borderSide: BorderSide(color: AppColors.grey)),
-            enabledBorder: OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(color: AppColors.grey.withOpacity(0.3)),
         ),
@@ -275,11 +371,8 @@ class _AddressScreenState extends State<AddressScreen> {
           borderSide: BorderSide(color: Colors.red.shade400, width: 2),
         ),
       ),
-      
       keyboardType: keyboardType,
       maxLines: maxLines,
     );
   }
 }
-
-

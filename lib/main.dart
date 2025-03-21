@@ -12,6 +12,7 @@ import 'package:picknow/views/bottombar/bottombar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/costants/navigation/navigation.dart';
+import 'providers/cart/address_provider.dart';
 import 'providers/cart/cart_provider.dart';
 import 'providers/category/all_category.dart';
 import 'providers/category/sub_category.dart';
@@ -75,6 +76,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (context) => ReviewProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
+         ChangeNotifierProvider(create: (_) => AddressProvider()),
       ],
       child: Consumer<InternetConnectivity>(
         builder: (context, internetConnectivity, child) {
