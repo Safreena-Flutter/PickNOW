@@ -7,7 +7,7 @@ import 'package:picknow/views/home/widgets/title.dart';
 import 'package:picknow/views/home/widgets/vendors_list.dart';
 import 'package:picknow/views/widgets/customsizedbox.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
+//import 'package:video_player/video_player.dart';
 import '../../providers/category/all_category.dart';
 import '../../providers/combo/combo_provider.dart';
 import 'widgets/category_widget.dart';
@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late VideoPlayerController _videoController;
+//  late VideoPlayerController _videoController;
   final ScrollController _scrollController = ScrollController();
   ComboListProvider comboListProvider = ComboListProvider();
   // bool _isVideoVisible = true;
@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _videoController.dispose();
+ //   _videoController.dispose();
     super.dispose();
   }
 

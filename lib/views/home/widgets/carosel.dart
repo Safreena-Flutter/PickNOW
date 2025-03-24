@@ -17,39 +17,34 @@ class _ImageCarouselState extends State<ImageCarousel> {
   final CarouselSliderController _carouselController =
       CarouselSliderController();
 
-  // Sample data - replace with your own images and texts
-  final List<Map<String, String>> carouselItems = [
-    {
-      "image":
-          "https://sindhidryfruits.live/cdn/shop/articles/The_Best_Dry_Fruits_for_Energy_A_Look_at_Nutrient-Rich_Powerhouses.png?v=1693213059",
-      "text": "Welcome to Our App",
-    },
-    {
-      "image":
-          "https://lh5.googleusercontent.com/proxy/sO9mLL8g4ur3ClhP9SPsNCfzD3VNagFIHP6w6STlFANHTPvptXlWz0imh3dQa492xaTwZmCN_1s7Y02Q28psY43Gyo7vzPrBeppPn9ZqPZ-Kljm29CQr28__",
-      "text": "Discover Amazing Products",
-    },
-    {
-      "image":
-          "https://media.istockphoto.com/id/598241944/photo/honey-in-jar-and-bunch-of-dry-lavender.webp?b=1&s=612x612&w=0&k=20&c=dFdIOtzku7KAwjVjRKVxB7fXu2vdxDXkgGU5JMPE9UA=",
-      "text": "Start Your Journey",
-    },
-     {
-      "image":
-          "https://www.orgoallnatural.com/blog/wp-content/uploads/2023/03/Handmade-Soaps-Benefits.webp",
-      "text": "Start Your Journey",
-    },
-     {
-      "image":
-          "https://mylaporeganapathys.com/wp-content/uploads/2017/10/mixed-pickle.jpg",
-      "text": "Start Your Journey",
-    },
-     {
-      "image":
-          "https://www.shutterstock.com/image-photo/legumes-lentils-chickpea-beans-assortment-260nw-1960506445.jpg",
-      "text": "Start Your Journey",
-    },
-  ];
+ final List<Map<String, String>> carouselItems = [
+  {
+    "image":
+        "https://images.pexels.com/photos/3872425/pexels-photo-3872425.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "text": "Welcome to a Healthier Lifestyle!",
+  },
+  {
+    "image":
+        "https://lh5.googleusercontent.com/proxy/sO9mLL8g4ur3ClhP9SPsNCfzD3VNagFIHP6w6STlFANHTPvptXlWz0imh3dQa492xaTwZmCN_1s7Y02Q28psY43Gyo7vzPrBeppPn9ZqPZ-Kljm29CQr28__",
+    "text": "Explore Nature’s Finest Products",
+  },
+  {
+    "image":
+        "https://images.pexels.com/photos/10631301/pexels-photo-10631301.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "text": "Pure Goodness, Straight from Nature",
+  },
+  {
+    "image":
+        "https://images.pexels.com/photos/16244100/pexels-photo-16244100/free-photo-of-close-up-of-natural-handmade-soap-bars.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "text": "Gentle Care, Handmade with Love",
+  },
+  {
+    "image":
+        "https://www.shutterstock.com/image-photo/legumes-lentils-chickpea-beans-assortment-260nw-1960506445.jpg",
+    "text": "Wholesome Goodness in Every Bite",
+  },
+];
+
 
   @override
   Widget build(BuildContext context) {
@@ -106,19 +101,15 @@ class _ImageCarouselState extends State<ImageCarousel> {
             );
           },
         ),
-        const SizedBox(height: 4),
-        // Smooth Page Indicator
         AnimatedSmoothIndicator(
           activeIndex: _currentIndex,
           count: carouselItems.length,
           effect: const WormEffect(
-            // You can change this to different effects
             dotHeight: 5,
             dotWidth: 8,
             spacing: 8,
             dotColor: Colors.grey,
             activeDotColor: AppColors.orange
-            // paintStyle: PaintingStyle.stroke,  // Uncomment for outlined dots
           ),
         ),
       ],

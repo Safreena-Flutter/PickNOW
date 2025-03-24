@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:picknow/core/utils/convert_date.dart';
+import 'package:picknow/views/products/widget/product_imageview.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart/cart_provider.dart';
 import '../../providers/combo/combo_provider.dart';
@@ -68,78 +69,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Stack(
-                    children: [
-                      CarouselSlider(
-                        options: CarouselOptions(
-                          height: 380,
-                          viewportFraction: 1.0,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _currentImageIndex = index;
-                            });
-                          },
-                          //  autoPlay: true,
-                          autoPlayInterval: Duration(seconds: 5),
-                        ),
-                        items: product.pImage.map((image) {
-                          return Stack(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(18),
-                                  image: DecorationImage(
-                                    image: NetworkImage(image),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.transparent,
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                      Positioned(
-                        bottom: 20,
-                        left: 0,
-                        right: 0,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children:
-                                  product.pImage.asMap().entries.map((entry) {
-                                return Container(
-                                  width:
-                                      _currentImageIndex == entry.key ? 24 : 8,
-                                  height: 8,
-                                  margin: EdgeInsets.symmetric(horizontal: 2),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: _currentImageIndex == entry.key
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.4),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                 ProductImageCarousel(images: product.pImage,),
                   SizedBox(
                     height: 20,
                   ),
@@ -403,7 +333,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                       }
 
                       return FeaturedProductsList(
-                        from: true,
+                        from: false,
                         products: relatedprovider.relatedProducts
                             .map((product) => {
                                   'id': product.id,

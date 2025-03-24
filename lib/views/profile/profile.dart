@@ -33,18 +33,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    Provider.of<ProfileProvider>(context, listen: false).loadUserProfile();
-    _loadProfileImage();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProfileProvider>(context, listen: false).loadUserProfile();
+      _loadProfileImage();
+    });
     super.initState();
   }
 
   Future<void> _loadProfileImage() async {
-    String savedImage = await SharedPrefsHelper.getProfileImage();
-    setState(() {
-      profileImage = savedImage;
-    });
+    String? savedImage = await SharedPrefsHelper.getProfileImage();
+    if (savedImage.isNotEmpty) {
+      setState(() {
+        profileImage = savedImage;
+      });
+    }
   }
-
+@override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  _loadProfileImage();  // Reload profile image when dependencies change
+}
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<ProfileProvider>(context);
@@ -55,23 +63,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: CustomText(
             text: "My Account", size: 0.04, color: AppColors.blackColor),
         actions: [
-          Row(
-            children: [
-              IconButton(
-                  onPressed: () {
-                    PageNavigations().push(WishlistScreen());
-                  },
-                  icon: Icon(Icons.favorite_border)),
-              Consumer<CartProvider>(
-                builder: (_, cart, __) => buildAnimatedIconButton(
-                  Icons.shopping_cart_outlined,
-                  badge: cart.itemCount.toString(),
-                  onPressed: () {
-                    PageNavigations().push(ShoppingCart(isfromhome: true));
-                  },
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      PageNavigations().push(WishlistScreen());
+                    },
+                    icon: Icon(Icons.favorite_border)),
+                Consumer<CartProvider>(
+                  builder: (_, cart, __) => buildAnimatedIconButton(
+                    Icons.shopping_cart_outlined,
+                    badge: cart.itemCount.toString(),
+                    onPressed: () {
+                      PageNavigations().push(ShoppingCart(isfromhome: true));
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),

@@ -73,7 +73,7 @@ class _BottomBarState extends State<BottomBar> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: currentIndex == 0
-            ? Size.fromHeight(mediaqueryheight(0.18, context))
+            ? Size.fromHeight(mediaqueryheight(0.145, context))
             : const Size.fromHeight(90.0),
         child: SafeArea(
             child: currentIndex == 0

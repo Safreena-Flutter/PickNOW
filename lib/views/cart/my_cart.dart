@@ -52,7 +52,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
       case 1:
         return AddressScreen(currentaddress, false);
       case 2:
-        return buildPaymentOptions(total);
+        return PaymentScreen();
       default:
         return buildCartContent(
             cartprovider, contex, subtotal, tax, delivery, total);

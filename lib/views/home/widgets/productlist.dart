@@ -18,8 +18,8 @@ class FeaturedProductsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: from == true
-          ? mediaqueryheight(0.332, context)
-          : mediaqueryheight(0.37, context),
+          ? mediaqueryheight(0.30, context)
+          : mediaqueryheight(0.32, context),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),

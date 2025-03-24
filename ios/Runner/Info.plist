@@ -6,6 +6,7 @@
         <string>We need access to your location to provide you with the best experience.</string>
         <key>NSLocationAlwaysUsageDescription</key>
         <string>We need access to your location to provide you with the best experience.</string>
+		<key>NSAllowsArbitraryLoads</key>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>

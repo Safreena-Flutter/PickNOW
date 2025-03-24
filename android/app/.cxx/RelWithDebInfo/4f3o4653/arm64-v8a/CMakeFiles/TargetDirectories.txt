@@ -1,0 +1,2 @@
+D:/Project/picknow/android/app/.cxx/RelWithDebInfo/4f3o4653/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/Project/picknow/android/app/.cxx/RelWithDebInfo/4f3o4653/arm64-v8a/CMakeFiles/rebuild_cache.dir

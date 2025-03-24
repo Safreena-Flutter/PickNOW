@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, deprecated_member_use, constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:picknow/views/widgets/custombutton.dart';
@@ -21,11 +21,11 @@ class AddressScreen extends StatefulWidget {
   _AddressScreenState createState() => _AddressScreenState();
 }
 
-enum AddressType { home, work }
+enum AddressType { Home, Work }
 
 class _AddressScreenState extends State<AddressScreen> {
   bool _showAddressForm = false;
-    final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _pincodeController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -33,7 +33,7 @@ class _AddressScreenState extends State<AddressScreen> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _houesnoController = TextEditingController();
   final TextEditingController _colornyController = TextEditingController();
-  AddressType _selectedAddressType = AddressType.home;
+  AddressType _selectedAddressType = AddressType.Home;
 
   @override
   void initState() {
@@ -79,8 +79,8 @@ class _AddressScreenState extends State<AddressScreen> {
         });
       } catch (e) {
         setState(() {
-          _cityController.text = 'Error';
-          _stateController.text = 'Error';
+          _cityController.text = '';
+          _stateController.text = '';
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e')),
@@ -207,7 +207,10 @@ class _AddressScreenState extends State<AddressScreen> {
 
               // Address Form (Only shown when "Add New Address" is tapped)
               if (_showAddressForm)
-                buildAddressForm(userProvider, addressProvider,),
+                buildAddressForm(
+                  userProvider,
+                  addressProvider,
+                ),
             ],
           ),
         ),
@@ -232,7 +235,7 @@ class _AddressScreenState extends State<AddressScreen> {
         ],
       ),
       child: Form(
-        key:_formKey ,
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -241,7 +244,7 @@ class _AddressScreenState extends State<AddressScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-        
+
             // Full Name Field
             buildTextField(
               "Full Name",
@@ -249,7 +252,7 @@ class _AddressScreenState extends State<AddressScreen> {
               _nameController,
             ),
             SizedBox(height: 10),
-        
+
             // Phone Number Field
             buildTextField(
               "Phone Number",
@@ -257,7 +260,7 @@ class _AddressScreenState extends State<AddressScreen> {
               _phoneController,
             ),
             SizedBox(height: 10),
-        
+
             // Pincode & District Fields
             Row(
               children: [
@@ -267,17 +270,17 @@ class _AddressScreenState extends State<AddressScreen> {
                 ),
                 SizedBox(width: 10),
                 Expanded(
-                  child:
-                      buildTextField("City", TextInputType.text, _cityController),
+                  child: buildTextField(
+                      "City", TextInputType.text, _cityController),
                 ),
               ],
             ),
             SizedBox(height: 10),
-        
+
             buildTextField(
                 "District, State", TextInputType.text, _stateController),
             SizedBox(height: 10),
-        
+
             buildTextField(
               "Street, Road Name, Area, Colony",
               TextInputType.text,
@@ -289,7 +292,7 @@ class _AddressScreenState extends State<AddressScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Radio<AddressType>(
-                  value: AddressType.work,
+                  value: AddressType.Work,
                   groupValue: _selectedAddressType,
                   fillColor: MaterialStateProperty.all(AppColors.orange),
                   onChanged: (AddressType? value) {
@@ -301,7 +304,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 Text("Work"),
                 SizedBox(width: 10),
                 Radio<AddressType>(
-                  value: AddressType.home,
+                  value: AddressType.Home,
                   groupValue: _selectedAddressType,
                   fillColor: MaterialStateProperty.all(AppColors.orange),
                   onChanged: (AddressType? value) {
@@ -313,30 +316,29 @@ class _AddressScreenState extends State<AddressScreen> {
                 Text("Home"),
               ],
             ),
-        
+
             SizedBox(height: 20),
-        
+
             // Save Address Button
             Center(
-              child: addressprovider.isPosting
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          Address newAddress = Address(
-                            type: "Home",
-                            street: "kk Nagar",
-                            city: "MATTU",
-                            state: _stateController.text,
-                            pincode:'643212',
-                            country: 'India',
-                          );
-                          addressprovider.submitAddress(newAddress);
-                        }
-                      },
-                      child: Text("Submit Address"),
-                    ),
-            ),
+                child: addressprovider.isPosting
+                    ? CircularProgressIndicator()
+                    : CustomElevatedButton(
+                        textColor: AppColors.whiteColor,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Address newAddress = Address(
+                              type: _selectedAddressType.name,
+                              street: _colornyController.text,
+                              city: _cityController.text,
+                              state: _stateController.text,
+                              pincode: _pincodeController.text,
+                              country: 'India',
+                            );
+                            addressprovider.submitAddress(newAddress);
+                          }
+                        },
+                        text: 'Submit Address')),
           ],
         ),
       ),
@@ -346,10 +348,25 @@ class _AddressScreenState extends State<AddressScreen> {
   Widget buildTextField(String label, TextInputType keyboardType,
       TextEditingController controller,
       {int maxLines = 1}) {
-    return TextField(
+    return TextFormField(
       cursorColor: AppColors.grey,
       controller: controller,
+      
+      validator: (value) {
+      if (value == null || value.trim().isEmpty) {
+        return '$label is required';
+      }
+      if (label == "Phone Number" && value.length != 10) {
+        return 'Enter a valid 10-digit phone number';
+      }
+      if (label == "Pincode" && value.length != 6) {
+        return 'Enter a valid 6-digit pincode';
+      }
+      return null;
+    },
+    autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
+        
         labelText: label,
         labelStyle: TextStyle(color: AppColors.grey),
         border:
@@ -357,6 +374,7 @@ class _AddressScreenState extends State<AddressScreen> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(color: AppColors.grey.withOpacity(0.3)),
+          
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
@@ -373,6 +391,7 @@ class _AddressScreenState extends State<AddressScreen> {
       ),
       keyboardType: keyboardType,
       maxLines: maxLines,
+      
     );
   }
 }

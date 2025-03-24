@@ -36,9 +36,11 @@ String profileImage = "";
         }
       });
         String savedImage = await SharedPrefsHelper.getProfileImage();
+     if (savedImage.isNotEmpty) {
       setState(() {
         profileImage = savedImage;
       });
+    }
     });
    
   }

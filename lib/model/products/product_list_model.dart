@@ -38,7 +38,7 @@ class Product {
   String pShortDescription;
   String pDescription;
   int pPrice;
-  int pPreviousPrice;
+  int? pPreviousPrice;
   int pSold;
   String pQuantity;
   String pCategory;
@@ -63,7 +63,7 @@ class Product {
     required this.pShortDescription,
     required this.pDescription,
     required this.pPrice,
-    required this.pPreviousPrice,
+     this.pPreviousPrice,
     required this.pSold,
     required this.pQuantity,
     required this.pCategory,

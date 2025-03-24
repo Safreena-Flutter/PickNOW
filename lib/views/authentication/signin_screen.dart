@@ -140,7 +140,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                   );
 
                                   if (success) {
-                                    PageNavigations().push(BottomBar());
+                                    PageNavigations().pushAndRemoveUntill(BottomBar());
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(

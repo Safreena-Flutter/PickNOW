@@ -1,4 +1,6 @@
  import 'package:flutter/material.dart';
+import 'package:picknow/core/costants/navigation/navigation.dart';
+import 'package:picknow/views/products/detailed_page.dart';
 
 import '../../../core/costants/theme/appcolors.dart';
 import '../../../providers/cart/cart_provider.dart';
@@ -40,122 +42,125 @@ Widget buildCartContent(CartProvider cartProvider,BuildContext context, double s
                             ),
                           );
                         },
-                        child: Card(
-                          color: AppColors.whiteColor,
-                          margin:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Row(
-                              children: [
-                                Stack(
-                                  alignment: Alignment.topRight,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.network(
-                                        item.images.first,
-                                        width: 90,
-                                        height: 90,
-                                        fit: BoxFit.cover,
+                        child: GestureDetector(
+                          onTap: () => PageNavigations().push(PremiumProductDetailPage(id: item.id)),
+                          child: Card(
+                            color: AppColors.whiteColor,
+                            margin:
+                                EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(12),
+                              child: Row(
+                                children: [
+                                  Stack(
+                                    alignment: Alignment.topRight,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          item.images.first,
+                                          width: 90,
+                                          height: 90,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
-                                    if (item.discountPercentage > 0)
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 6, vertical: 2),
-                                        decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10),
+                                      if (item.discountPercentage > 0)
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 6, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            '${item.discountPercentage.round()}% OFF',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
-                                        child: Text(
-                                          '${item.discountPercentage.round()}% OFF',
+                                    ],
+                                  ),
+                                  SizedBox(width: 15),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item.name,
                                           style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      ),
-                                  ],
-                                ),
-                                SizedBox(width: 15),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item.name,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        item.weight,
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '₹${(item.price * item.quantity) }',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.blackColor,
-                                            ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          item.weight,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 14,
                                           ),
-                                        ],
+                                        ),
+                                        SizedBox(height: 8),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '₹${(item.price * item.quantity) }',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.blackColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(
+                                            Icons.remove_circle_outline_rounded,
+                                            color: AppColors.orange,
+                                            size: 23),
+                                        onPressed: () {
+                                          if (item.quantity > 1) {
+                                            cartProvider.updateQuantity(
+                                                index, item.quantity - 1);
+                                          }
+                                        },
+                                      ),
+                                      Text(
+                                        '${item.quantity}',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                            Icons.add_circle_outline_rounded,
+                                            color: Colors.orange,
+                                            size: 23),
+                                        onPressed: () {
+                                          cartProvider.updateQuantity(
+                                              index, item.quantity + 1);
+                                        },
                                       ),
                                     ],
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                          Icons.remove_circle_outline_rounded,
-                                          color: AppColors.orange,
-                                          size: 23),
-                                      onPressed: () {
-                                        if (item.quantity > 1) {
-                                          cartProvider.updateQuantity(
-                                              index, item.quantity - 1);
-                                        }
-                                      },
-                                    ),
-                                    Text(
-                                      '${item.quantity}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(
-                                          Icons.add_circle_outline_rounded,
-                                          color: Colors.orange,
-                                          size: 23),
-                                      onPressed: () {
-                                        cartProvider.updateQuantity(
-                                            index, item.quantity + 1);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

@@ -1,85 +1,76 @@
 
 
   import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
-import 'package:picknow/views/widgets/customtext.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-Widget buildPaymentOptions(dynamic total) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomText(
-            text: "Select Payment Method",
-            size: 0.025,
-            color: AppColors.blackColor,
-            weight: FontWeight.bold,
-          ),
-          SizedBox(height: 16),
-          _buildPaymentOption(
-            icon: Icons.account_balance,
-            title: "UPI Payment",
-            subtitle: "Pay using UPI",
-          ),
-          _buildPaymentOption(
-            icon: Icons.credit_card,
-            title: "Card Payment",
-            subtitle: "Credit/Debit Card",
-          ),
-          _buildPaymentOption(
-            icon: Icons.money,
-            title: "Cash on Delivery",
-            subtitle: "Pay when you receive",
-          ),
-          SizedBox(height: 20),
-          // Price Summary
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(
-                    text: "Price Details",
-                    size: 0.025,
-                    color: AppColors.blackColor,
-                    weight: FontWeight.bold,
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Total Amount:"),
-                      Text("₹${total.round()}"),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+class PaymentScreen extends StatefulWidget {
+  @override
+  _PaymentScreenState createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends State<PaymentScreen> {
+  late Razorpay _razorpay;
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
+
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
-  Widget _buildPaymentOption({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return Card(
-      margin: EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: Icon(icon, color: AppColors.orange),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        trailing: Radio(
-          value: title,
-          groupValue: null,
-          onChanged: (value) {},
-          activeColor: AppColors.orange,
+  void _openCheckout() {
+    var options = {
+      'key': 'rzp_test_yJFAeBzCqlRAoY', // Replace with your key
+      'amount': 100 * 100, // Amount in paise (500.00 INR)
+      'name': 'PickNow',
+      'description': 'Payment for Order #1234',
+      'prefill': {
+        'contact': '9876543210',
+        'email': 'user@example.com',
+      },
+
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    print("Payment Success: ${response.paymentId}");
+    // Handle success (e.g., update order status)
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    print("Payment Error: ${response.message}");
+    // Handle failure (show error message)
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    print("External Wallet: ${response.walletName}");
+    // Handle wallet payment
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          onPressed: _openCheckout,
+          child: Text('Pay Now'),
         ),
       ),
     );
   }
+}
