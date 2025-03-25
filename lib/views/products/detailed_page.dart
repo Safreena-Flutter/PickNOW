@@ -1,7 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:picknow/core/utils/convert_date.dart';
 import 'package:picknow/views/products/widget/product_imageview.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +29,6 @@ class PremiumProductDetailPage extends StatefulWidget {
 
 class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
     with TickerProviderStateMixin {
-  int _currentImageIndex = 0;
   bool _isDetailsExpanded = false;
   bool _isFeaturesExpanded = false;
   bool _isReviewsExpanded = false;

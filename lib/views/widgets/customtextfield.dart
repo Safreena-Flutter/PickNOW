@@ -51,7 +51,7 @@ class CustomTextfield extends StatelessWidget {
       inputFormatters: textInputFormatter,
       maxLines: obscureText ? 1 : maxLines,
       maxLength: maxLengths,
-      minLines: minLines,
+      minLines:obscureText ? 1 : minLines,
       cursorColor: AppColors.cream,
       style: TextStyle(color: Colors.black),
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -96,3 +96,38 @@ class CustomTextfield extends StatelessWidget {
     );
   }
 }
+ Widget buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required IconData prefixIcon,
+    TextInputType keyboardType = TextInputType.text,
+    bool obscureText = false,
+    Widget? suffixIcon,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      obscureText: obscureText,
+      validator: validator,
+      decoration: InputDecoration(
+        hintText: hintText,
+        prefixIcon: Icon(prefixIcon, color: Color(0xFFFF6F00)),
+        suffixIcon: suffixIcon,
+        filled: true,
+        fillColor: Colors.grey[100],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.red),
+        ),
+      ),
+    );
+  }

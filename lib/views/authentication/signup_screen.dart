@@ -5,7 +5,6 @@ import 'package:picknow/core/costants/navigation/navigation.dart';
 import 'package:picknow/views/authentication/otpscreen.dart';
 import 'package:picknow/views/authentication/signin_screen.dart';
 import 'package:picknow/views/widgets/customsizedbox.dart';
-import 'package:picknow/views/widgets/customtext.dart';
 import 'package:provider/provider.dart';
 import '../../core/costants/theme/appcolors.dart';
 import '../../providers/authentication/register_provider.dart';
@@ -26,7 +25,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  bool _isObscured = true;
+  bool _isPasswordObscured = true;
 
   String? _validateName(String? value) {
     if (value == null || value.isEmpty) {
@@ -38,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return 'Phone number is required';
-    }  else if (value.length != 10 || int.tryParse(value) == null) {
+    } else if (value.length != 10 || int.tryParse(value) == null) {
       return 'Enter a valid 10-digit phone number';
     }
     return null;
@@ -47,15 +46,8 @@ class _SignupScreenState extends State<SignupScreen> {
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
-    }  else if (!value.contains('@') || !value.contains('.')) {
+    } else if (!value.contains('@') || !value.contains('.')) {
       return 'Enter a valid email address';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Password is required';
     }
     return null;
   }
@@ -66,146 +58,192 @@ class _SignupScreenState extends State<SignupScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.orange,
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                fit: BoxFit.cover,
-                height: 150,
-                width: 150,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30))),
-                child: Padding(
-                  padding: const EdgeInsets.all(18.0),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.orange.withOpacity(0.8), // Deep Orange
+              AppColors.orange, // Light Orange
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Header Section
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
                   child: Column(
                     children: [
-                      Text(
-                        "Let's get started",
-                        style: TextStyle(fontSize: 18, color: AppColors.grey),
+                      // Logo or Brand Name
+                      Image.asset(
+                        'assets/images/logo.png', // Replace with your e-commerce logo
+                        height: 180,
+                        width: 180,
                       ),
+
                       Text(
-                        'Create Your Account',
+                        'Welcome to PickNow',
                         style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 20),
-                      CustomTextfield(
-                        controller: nameController,
-                        label: 'Enter your name',
-                        prefixIcon: Icon(Icons.person, color: AppColors.grey),
-                        validator: _validateName,
-                      ),
-                      SizedBox(height: 15),
-                      CustomTextfield(
-                        controller: phoneController,
-                        label: 'Enter your phone number',
-                        keyboardType: TextInputType.phone,
-                        prefixIcon: Icon(Icons.phone, color: AppColors.grey),
-                        validator: _validatePhone,
-                      ),
-                      SizedBox(height: 15),
-                      CustomTextfield(
-                        controller: emailController,
-                        label: 'Enter your email id',
-                        keyboardType: TextInputType.emailAddress,
-                        prefixIcon: Icon(Icons.email, color: AppColors.grey),
-                        validator: _validateEmail,
-                      ),
-                      SizedBox(height: 15),
-                      CustomTextfield(
-                        controller: passwordController,
-                        label: 'Enter your password',
-                        obscureText: _isObscured,
-                        
-                        prefixIcon: Icon(Icons.lock, color: AppColors.grey),
-                        suffix: IconButton(
-                          icon: Icon(
-                            _isObscured
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: AppColors.blackColor,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isObscured = !_isObscured;
-                            });
-                          },
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
-                        validator: _validatePassword,
                       ),
-                      SizedBox(height: 20),
-                      authProvider.isLoading
-                          ? CircularProgressIndicator()
-                          : CustomElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  await authProvider.registerUser(
-                                    name: nameController.text,
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                    contact: phoneController.text,
-                                  );
-
-                                  if (authProvider.activationToken != null) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => OtpScreen(
-                                          emailid:emailController.text ,
-                                          activationToken:
-                                              authProvider.activationToken!,
-                                        ),
-                                      ),
-
-                                    );
-                                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                                Text('OTP sent successfully to your email')),
-                      );
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text('Registration failed')),
-                                    );
-                                  }
-                                }
-                              },
-                              text: 'Register',
-                              textStyle:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                      SizedBox(height: 15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomText(
-                              text: 'Already have an account ?',
-                              size: 0.04,
-                              color: AppColors.blackColor),
-                              TextButton(
-                        onPressed: () {
-                          PageNavigations().push(SigninScreen());
-                        },
-                        child: CustomText(text: 'Sign In', size: 0.04, color: AppColors.orange,weight: FontWeight.bold,),
-                       
+                      CustomSizedBoxHeight(0.015),
+                      Text(
+                        'SignUp in to continue shopping',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
                       ),
-                        ],
-                      ),
-                      CustomSizedBoxHeight(0.1),
                     ],
                   ),
                 ),
-              ),
-            ],
+
+                // Sign In Form
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                  padding: EdgeInsets.all(30),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        buildTextField(
+                          controller: nameController,
+                          hintText: 'Name',
+                          prefixIcon: Icons.person,
+                          keyboardType: TextInputType.text,
+                          validator: _validateName,
+                        ),
+                        SizedBox(height: 20),
+                        buildTextField(
+                          controller: phoneController,
+                          hintText: 'Phone Number',
+                          prefixIcon: Icons.phone,
+                          keyboardType: TextInputType.number,
+                          validator: _validatePhone,
+                        ),
+                        SizedBox(height: 20),
+                        buildTextField(
+                            controller: emailController,
+                            hintText: 'Email Address',
+                            prefixIcon: Icons.email_outlined,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: _validateEmail),
+                        SizedBox(height: 20),
+
+                        // Password TextField
+                        buildTextField(
+                          controller: passwordController,
+                          hintText: 'Password',
+                          prefixIcon: Icons.lock_outline,
+                          obscureText: _isPasswordObscured,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordObscured
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: AppColors.orange,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordObscured = !_isPasswordObscured;
+                              });
+                            },
+                          ),
+                          validator: (value) {
+                            if (value == null || value.length < 5) {
+                              return 'Password must be at least 5 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        authProvider.isLoading
+                            ? Center(child: CircularProgressIndicator(color: AppColors.grey,))
+                            : CustomElevatedButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    await authProvider.registerUser(
+                                      name: nameController.text,
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                      contact: phoneController.text,
+                                    );
+
+                                    if (authProvider.activationToken != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => OtpScreen(
+                                            emailid: emailController.text,
+                                            activationToken:
+                                                authProvider.activationToken!,
+                                          ),
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'OTP sent successfully to your email')),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text('Registration failed')),
+                                      );
+                                    }
+                                  }
+                                },
+                                text: 'Sign Up',
+                                textStyle: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+
+                        SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Already have an account? ",
+                              style: TextStyle(color: Colors.grey[700]),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                PageNavigations().push(SigninScreen());
+                              },
+                              child: Text(
+                                'Sign In',
+                                style: TextStyle(
+                                  color: Color(0xFFFF6F00),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

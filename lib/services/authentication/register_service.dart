@@ -1,9 +1,11 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:picknow/core/costants/api/baseurl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../model/authentication/register.dart';
 
 class RegisterService {
@@ -18,8 +20,9 @@ class RegisterService {
       debugPrint('Response Status Code: ${response.statusCode}');
       debugPrint('Response Body: ${response.body}');
 
+      final jsonData = json.decode(response.body);
+
       if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
         UserModel user = UserModel.fromJson(jsonData);
 
         // Store token in SharedPreferences
@@ -28,10 +31,20 @@ class RegisterService {
 
         return user;
       } else {
-        throw Exception('Failed to register');
+        // Extract and show the error message in a toast
+        String errorMessage = jsonData['message'] ?? 'Failed to register';
+        Fluttertoast.showToast(
+          msg: errorMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+
+    throw Exception(errorMessage); 
       }
     } catch (e) {
-      throw Exception('Error: $e');
+    throw Exception('Error: $e');
     }
   }
 

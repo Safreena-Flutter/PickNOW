@@ -23,8 +23,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   void _openCheckout() {
     var options = {
-      'key': 'rzp_test_yJFAeBzCqlRAoY', // Replace with your key
-      'amount': 100 * 100, // Amount in paise (500.00 INR)
+      'key': 'rzp_test_yJFAeBzCqlRAoY',
+      'amount': 100 * 100,
       'name': 'PickNow',
       'description': 'Payment for Order #1234',
       'prefill': {
@@ -43,17 +43,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     print("Payment Success: ${response.paymentId}");
-    // Handle success (e.g., update order status)
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print("Payment Error: ${response.message}");
-    // Handle failure (show error message)
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     print("External Wallet: ${response.walletName}");
-    // Handle wallet payment
   }
 
   @override

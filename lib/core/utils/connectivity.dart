@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import '../costants/theme/appcolors.dart';
 
 class InternetConnectivity with ChangeNotifier {
@@ -51,13 +49,7 @@ class NoInternetScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text("Please check your internet and try again."),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                SystemNavigator.pop(); 
-              },
-              child: Text("Exit"),
-            ),
+            
           ],
         ),
       ),

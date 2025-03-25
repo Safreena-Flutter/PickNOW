@@ -21,4 +21,29 @@ class AddressProvider with ChangeNotifier {
     _message = success ? "Address submitted successfully!" : "Failed to submit address";
     notifyListeners();
   }
+
+
+  List<AllAddress> _addresses = [];
+  bool _isLoading = false;
+
+  List<AllAddress> get addresses => _addresses;
+  bool get isLoading => _isLoading;
+
+
+  Future<void> loadAddresses() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      AddressModel addressModel = await _addressService.fetchAddresses();
+      _addresses = addressModel.addresses;
+    } catch (e) {
+      _addresses = [];
+      print("Error fetching addresses: $e");
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
 }
+
