@@ -210,7 +210,7 @@ void didChangeDependencies() {
                 color: AppColors.grey,
               ),
               onTap: () {
-                PageNavigations().push(AddressScreen(widget.address, true));
+                PageNavigations().push(AddressScreen(true));
               },
             ),
             ListTile(
@@ -230,7 +230,7 @@ void didChangeDependencies() {
                 color: AppColors.grey,
               ),
               onTap: () {
-                PageNavigations().push(AddressScreen(widget.address, true));
+               // PageNavigations().push(AddressScreen(widget.address, true, ));
               },
             ),
             ListTile(

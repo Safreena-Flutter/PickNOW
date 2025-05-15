@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:picknow/views/cart/address.dart';
 import 'package:provider/provider.dart';
 import '../../core/costants/navigation/navigation.dart';
+import '../../model/address/address.dart';
 import '../../providers/cart/cart_provider.dart';
 import '../search/search_screen.dart';
 import '../wishlist/wishlist.dart';
@@ -11,7 +12,6 @@ import 'package:picknow/core/costants/theme/appcolors.dart';
 import 'package:picknow/views/cart/payment_option.dart';
 import 'package:picknow/views/cart/step.dart';
 import '../../core/costants/mediaquery/mediaquery.dart';
-import '../address/current_address.dart';
 import '../widgets/customtext.dart';
 import 'widget/cart_widget.dart';
 
@@ -25,9 +25,7 @@ class ShoppingCart extends StatefulWidget {
 
 class _ShoppingCartState extends State<ShoppingCart> {
   int currentstep = 0;
-
-  String _currentAddress = "Fetch address";
-  final LocationService _locationService = LocationService();
+Address? selectedAddress;
 
   void moveToNextStep() {
     setState(() {
@@ -38,7 +36,6 @@ class _ShoppingCartState extends State<ShoppingCart> {
   }
 
   Widget _buildStepContent(
-      String currentaddress,
       CartProvider cartprovider,
       BuildContext contex,
       double subtotal,
@@ -50,9 +47,17 @@ class _ShoppingCartState extends State<ShoppingCart> {
         return buildCartContent(
             cartprovider, contex, subtotal, tax, delivery, total);
       case 1:
-        return AddressScreen(currentaddress, false);
+        return  AddressScreen(
+        false,
+        onAddressSelected: (Address address) {
+          setState(() {
+            selectedAddress = address;
+            currentstep = 2;
+          });
+        },
+      );
       case 2:
-        return PaymentScreen();
+        return PaymentScreen(selectedAddress: selectedAddress!, total: total.round(),);
       default:
         return buildCartContent(
             cartprovider, contex, subtotal, tax, delivery, total);
@@ -63,18 +68,9 @@ class _ShoppingCartState extends State<ShoppingCart> {
   void initState() {
     super.initState();
     Provider.of<CartProvider>(context, listen: false).loadCart();
-    _fetchLocation();
   }
 
-  Future<void> _fetchLocation() async {
-    setState(() {});
 
-    String address = await _locationService.getCurrentLocation();
-
-    setState(() {
-      _currentAddress = address;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +79,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
             .fold(0, (sum, item) => sum! + (item.price * item.quantity)) ??
         0;
     double tax = subtotal * 0.04;
-    double deliveryCharge = subtotal > 500 ? 0 : 50;
+    double deliveryCharge = subtotal > 500 ? 0 : 0;
     double total = subtotal + tax + deliveryCharge;
     return Scaffold(
       appBar: AppBar(
@@ -137,10 +133,11 @@ class _ShoppingCartState extends State<ShoppingCart> {
               },
               elevation: 0,
               physics: BouncingScrollPhysics(),
+
             ),
           ),
           Expanded(
-            child: _buildStepContent(_currentAddress, cartProvider, context,
+            child: _buildStepContent(cartProvider, context,
                 subtotal, tax, deliveryCharge, total),
           ),
         ],

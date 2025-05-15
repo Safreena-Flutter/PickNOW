@@ -8,13 +8,14 @@ class ProductListService {
     required String categoryId,
   }) async {
     try {
+   
       final response = await http.get(
         Uri.parse(
           'https://backmern.picknow.in/api/products/nested-subcategory/$categoryId',
         ),
       );
       debugPrint('response status code ${response.statusCode}');
-      debugPrint('response body : ${response.body}');
+      debugPrint('response body11 : ${response.body}');
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         return ProductResponse.fromJson(jsonData);
@@ -22,6 +23,7 @@ class ProductListService {
         throw Exception('Failed to load products');
       }
     } catch (e) {
+      debugPrint("hall");
       debugPrint('Error fetching products: $e');
       return ProductResponse(
         products: [],
@@ -36,7 +38,7 @@ class ProductListService {
 
     try {
       final response = await http.get(Uri.parse(url));
-
+print('rr ');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data["success"] == true) {

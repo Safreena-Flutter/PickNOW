@@ -34,6 +34,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
 
   void _loadProducts() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('categoryid ${widget.categoryname}');
       widget.isfromcatogory == true
           ? context.read<ProductListProvider>().fetchProducts(
                 categoryId: widget.categoryId!,
@@ -144,7 +145,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                           ),
                         ),
                       ),
-                      if (product.pOffer != "0")
+                      if (product.pOffer != 0)
                         Positioned(
                           top: 8,
                           left: 8,
@@ -216,7 +217,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                         Row(
                           children: [
                             Text(
-                              'Rs.${product.pPrice.toString()}',
+                              'Rs.${product.pPrice}',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

@@ -24,6 +24,7 @@ class SubCategoryScreen extends StatefulWidget {
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
   @override
   void initState() {
+
     super.initState();
     Provider.of<SubCategoryProvider>(context, listen: false)
         .loadSubCategories(widget.categoryId);
@@ -68,7 +69,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
           child: ProductsGridview(
             categoryname: widget.title,
             isfromcatogory: false,
-           
+           categoryId: widget.categoryId,
           ),
         ),
       ],

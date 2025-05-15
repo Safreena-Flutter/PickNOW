@@ -11,7 +11,8 @@ class ComboService {
           'https://backmern.picknow.in/api/combo/all',
         ),
       );
-      debugPrint('response body : ${response.body}');
+      debugPrint('response 11111 : ${response.body}');
+      
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
         return jsonData.map((combo) => Combo.fromJson(combo)).toList();

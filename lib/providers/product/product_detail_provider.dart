@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import '../../model/products/product_list_model.dart';
+import 'package:picknow/model/products/product_details_model.dart';
 import '../../services/product_detail_service.dart';
 
 class ProductDetailProvider extends ChangeNotifier {
   final ProductDetailService _service = ProductDetailService();
-  ProductdetailResponse? _productDetail;
+  ProductDetails? _productDetail;
   bool _isLoading = false;
   String? _error;
 
-  ProductdetailResponse? get productDetail => _productDetail;
+  ProductDetails? get productDetail => _productDetail;
   bool get isLoading => _isLoading;
   String? get error => _error;
 

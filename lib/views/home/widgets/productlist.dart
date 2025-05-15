@@ -1,11 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/mediaquery/mediaquery.dart';
 import 'package:picknow/core/costants/navigation/navigation.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
 import 'package:provider/provider.dart';
-
 import '../../../providers/whishlist/whishlist_provider.dart';
 import '../../products/detailed_page.dart';
 
@@ -16,10 +13,9 @@ class FeaturedProductsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double containerHeight = MediaQuery.of(context).size.height * (from == true ? 0.32 : 0.34);
     return SizedBox(
-      height: from == true
-          ? mediaqueryheight(0.30, context)
-          : mediaqueryheight(0.32, context),
+      height: containerHeight,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -28,13 +24,13 @@ class FeaturedProductsList extends StatelessWidget {
           final product = products[index];
           return ProductCard(
             id: product['id'],
-              offer: product['offer'],
-              productName: product['name'],
-              productWeight: product['weight'],
-              price: product['price'],
-              originalPrice: product['originalPrice'],
-              imageUrl: product['imageUrl'],
-              );
+            offer: product['offer'],
+            productName: product['name'],
+            productWeight: product['weight'],
+            price: product['price'],
+            originalPrice: product['originalPrice'],
+            imageUrl: product['imageUrl'],
+          );
         },
       ),
     );
@@ -67,9 +63,12 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double imageHeight = screenWidth * 0.45;
+    double cardWidth = screenWidth * 0.45;
     return Container(
-      width: mediaquerywidth(0.4, context),
-      margin: const EdgeInsets.only(left: 4),
+      width: cardWidth,
+      margin: const EdgeInsets.symmetric(horizontal: 6),
       child: GestureDetector(
         onTap: () {
           PageNavigations().push(PremiumProductDetailPage(
@@ -78,56 +77,58 @@ class ProductCard extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: AppColors.grey.withOpacity(0.1))),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.withOpacity(0.2)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(4)),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
                     child: Image.network(
                       imageUrl,
-                      height: mediaqueryheight(0.2, context),
+                      height: imageHeight,
                       width: double.infinity,
                       fit: BoxFit.cover,
                     ),
                   ),
                   Positioned(
-                    top: 8,
-                    right: 8,
-                    child:  Consumer<WishlistProvider>(
-                            builder: (context, wishlistProvider, child) {
-                              bool isWishlisted =
-                                  wishlistProvider.isWishlisted(id);
-                              bool isLoading = wishlistProvider.isLoading(id); // Get loading state for this product
-
-                              return GestureDetector(
-                                onTap: () {
-                                  wishlistProvider.toggleWishlist(id);
-                                },
-                                child: isLoading
-                                    ? const SizedBox(
-                                        width: 24,
-                                        height: 24,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Icon(
-                                        isWishlisted
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color: isWishlisted
-                                            ? Colors.red
-                                            : Colors.white,
-                                      ),
-                              );
-                            },
-                          ),
+                    top: 10,
+                    right: 10,
+                    child: Consumer<WishlistProvider>(
+                      builder: (context, wishlistProvider, child) {
+                        bool isWishlisted = wishlistProvider.isWishlisted(id);
+                        bool isLoading = wishlistProvider.isLoading(id);
+                        return GestureDetector(
+                          onTap: () {
+                            wishlistProvider.toggleWishlist(id);
+                          },
+                          child: isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Icon(
+                                  isWishlisted ? Icons.favorite : Icons.favorite_border,
+                                  color: isWishlisted ? Colors.red : Colors.white,
+                                ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -136,45 +137,20 @@ class ProductCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                productName,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              productWeight != "1"
-                                  ? Text(
-                                      productWeight,
-                                      style:
-                                          const TextStyle(color: Colors.grey),
-                                    )
-                                  : SizedBox.shrink(),
-                            ],
-                          ),
-                        ),
-                      ],
+                    Text(
+                      productName,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    if (productWeight != "1")
+                      Text(
+                        productWeight,
+                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
                     const SizedBox(height: 6),
-                    rating != null && reviews != null
-                        ? Row(
-                            children: const [
-                              Icon(Icons.star,
-                                  color: Colors.blueGrey, size: 20),
-                              SizedBox(width: 4),
-                              Text('4.5'),
-                            ],
-                          )
-                        : SizedBox.shrink(),
-                    const SizedBox(height: 3),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -182,7 +158,7 @@ class ProductCard extends StatelessWidget {
                           '₹$price',
                           style: const TextStyle(
                             color: Colors.black,
-                            fontSize: 13,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -191,24 +167,25 @@ class ProductCard extends StatelessWidget {
                           style: const TextStyle(
                             color: Colors.grey,
                             decoration: TextDecoration.lineThrough,
+                            fontSize: 12,
                           ),
                         ),
-                        offer != 0
-                            ? Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.green.withOpacity(0.1),
-                                ),
-                                child: Text(
-                                  '$offer% Off',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.green[600],
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            : SizedBox.shrink(),
+                        if (offer != 0)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.green.withOpacity(0.1),
+                            ),
+                            child: Text(
+                              '$offer% Off',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.green[600],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ],

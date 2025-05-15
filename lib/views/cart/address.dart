@@ -11,14 +11,19 @@ import '../../providers/cart/address_provider.dart';
 import '../../providers/profile/userprofile_provider.dart';
 
 class AddressScreen extends StatefulWidget {
-  final String currentAddress;
   final bool isFromHome;
+  final Function(Address)? onAddressSelected;
 
-  const AddressScreen(this.currentAddress, this.isFromHome, {super.key});
+  const AddressScreen(
+    this.isFromHome, {
+    this.onAddressSelected,
+    super.key,
+  });
 
   @override
   _AddressScreenState createState() => _AddressScreenState();
 }
+
 
 enum AddressType { Home, Work }
 
@@ -278,6 +283,9 @@ class _AddressScreenState extends State<AddressScreen> {
                               country: 'India',
                             );
                             addressprovider.submitAddress(newAddress);
+                            if (widget.onAddressSelected != null) {
+      widget.onAddressSelected!(newAddress);
+    }
                           }
                         },
                         text: 'Submit Address')),

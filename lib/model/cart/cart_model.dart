@@ -24,10 +24,10 @@ class CartItem {
       id: json['product']['_id'],
       name: json['product']['pName'],
       price: (json['product']['pPrice'] as num).toDouble(),
-      weight: json['product']['pQuantity'],
+      weight: json['product']['pQuantity']?.toString() ?? '',
       stock: json['product']['pStock'],
       images: List<String>.from(json['product']['pImage']),
-      discountPercentage: double.tryParse(json['product']['pOffer']) ?? 0,
+      discountPercentage: double.tryParse(json['product']['pOffer']?.toString() ?? '0') ?? 0,
       quantity: json['quantity'],
     );
   }

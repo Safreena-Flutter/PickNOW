@@ -4,6 +4,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:picknow/core/utils/connectivity.dart';
 import 'package:picknow/providers/authentication/login_provider.dart';
 import 'package:picknow/providers/authentication/register_provider.dart';
+import 'package:picknow/providers/cart/order.dart';
 import 'package:picknow/providers/product/product_detail_provider.dart';
 import 'package:picknow/providers/product/product_list_provider.dart';
 import 'package:picknow/providers/profile/userprofile_provider.dart';
@@ -77,6 +78,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => ReviewProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
          ChangeNotifierProvider(create: (_) => AddressProvider()),
+          ChangeNotifierProvider(create: (_) => OrderProvider()),
       ],
       child: Consumer<InternetConnectivity>(
         builder: (context, internetConnectivity, child) {

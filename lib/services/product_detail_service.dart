@@ -1,17 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../model/products/product_list_model.dart';
+import 'package:picknow/model/products/product_details_model.dart';
+
 
 class ProductDetailService {
-  Future<ProductdetailResponse> getProductDetails(String id) async {
+  Future<ProductDetails> getProductDetails(String id) async {
     try {
       final response = await http.get(
         Uri.parse('https://backmern.picknow.in/api/product/$id'),
       );
+      debugPrint("reees ${response.body}");
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
-        return ProductdetailResponse.fromJson(jsonData);
+        return ProductDetails.fromJson(jsonData);
       } else {
         throw Exception('Failed to load product details');
       }

@@ -1,4 +1,3 @@
-import '../products/product_list_model.dart';
 
 class Combo {
   String id;
@@ -9,7 +8,7 @@ class Combo {
   int ccOffer;
   int ccQuantity;
   String ccStatus;
-  List<Product> ccProducts;
+  List<Map<String, dynamic>> ccProducts;
   DateTime createdAt;
   DateTime updatedAt;
   int v;
@@ -39,11 +38,10 @@ class Combo {
       ccOffer: json['ccOffer'],
       ccQuantity: json['ccQuantity'],
       ccStatus: json['ccStatus'],
-      ccProducts: List<Product>.from(json['ccProducts'].map((x) => Product.fromJson(x))),
+      ccProducts: List<Map<String, dynamic>>.from(json['ccProducts'].map((x) => x)),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       v: json['__v'],
     );
   }
-
 }

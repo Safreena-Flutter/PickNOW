@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:picknow/core/utils/convert_date.dart';
+import 'package:picknow/model/products/product_details_model.dart';
 import 'package:picknow/views/products/widget/product_imageview.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart/cart_provider.dart';
@@ -34,6 +35,8 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
   bool _isReviewsExpanded = false;
   bool isFavorite = false;
   ComboListProvider comboListProvider = ComboListProvider();
+  Variant? selectedVariant;
+  int quantity = 1;
   @override
   void initState() {
     super.initState();
@@ -67,7 +70,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 ProductImageCarousel(images: product.pImage,),
+                 ProductImageCarousel(images: product.images,),
                   SizedBox(
                     height: 20,
                   ),
@@ -78,7 +81,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            product.pName,
+                            product.name,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -168,7 +171,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '₹${product.pPrice.toString()}',
+                            '₹${selectedVariant?.price ?? product.variants.first.price}',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -177,7 +180,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                           ),
                           SizedBox(width: 10),
                           Text(
-                            '₹${product.pPreviousPrice.toString()}',
+                            '₹${product.variants.first.previousPrice.toString()}',
                             style: TextStyle(
                               fontSize: 17,
                               decoration: TextDecoration.lineThrough,
@@ -186,7 +189,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                           ),
                         ],
                       ),
-                      product.pOffer != '0'
+                      product.offer != 0
                           ? Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8),
@@ -195,7 +198,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               child: Text(
-                                '${product.pOffer}% OFF',
+                                '${product.offer}% OFF',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
@@ -206,6 +209,38 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                     ],
                   ),
                   SizedBox(height: 20),
+                  if (product.variants.length > 1) ...[
+                    Text(
+                      'Select Variant',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      children: product.variants.map((variant) {
+                        final isSelected = selectedVariant?.id == variant.id;
+                        return ChoiceChip(
+                          label: Text(variant.size),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            if (selected) {
+                              _selectVariant(variant);
+                            }
+                          },
+                          backgroundColor: Colors.grey[200],
+                          selectedColor: Colors.green[100],
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.green[800] : Colors.black,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 20),
+                  ],
                   buildElegantShippingInfo(),
                   SizedBox(height: 20),
                   Column(
@@ -233,10 +268,10 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                         },
                         child: Column(
                           children: [
-                            DetailRow(label: 'Brand', value: product.pBrand),
+                            DetailRow(label: 'Brand', value: product.brand ?? ""),
                             DetailRow(
                                 label: 'Net Quantity',
-                                value: product.pQuantity),
+                                value: product.variants.first.size?? ""),
                           ],
                         ),
                       ),
@@ -256,7 +291,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              product.pShortDescription,
+                              product.shortDescription,
                               style: TextStyle(
                                 fontSize: 16,
                                 height: 1.6,
@@ -265,7 +300,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                             ),
                             SizedBox(height: 10),
                             Text(
-                              product.pDescription,
+                              product.description,
                               style: TextStyle(
                                 fontSize: 16,
                                 height: 1.6,
@@ -368,8 +403,8 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                     onTap: () =>
                         Provider.of<CartProvider>(context, listen: false)
                             .addToCart(
-                      widget.id,
-                      1,
+                      selectedVariant?.id ?? widget.id,
+                      quantity,
                     ),
                     child: Container(
                       height: 56,
@@ -527,5 +562,20 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
         )
       ],
     );
+  }
+
+  void _selectVariant(Variant variant) {
+    setState(() {
+      selectedVariant = variant;
+      quantity = 1; // Reset quantity when variant changes
+    });
+  }
+
+  void _updateQuantity(int newQuantity) {
+    if (newQuantity > 0 && selectedVariant != null && newQuantity <= selectedVariant!.stock) {
+      setState(() {
+        quantity = newQuantity;
+      });
+    }
   }
 }
