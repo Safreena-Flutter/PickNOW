@@ -5,6 +5,9 @@ import 'package:picknow/core/utils/connectivity.dart';
 import 'package:picknow/providers/authentication/login_provider.dart';
 import 'package:picknow/providers/authentication/register_provider.dart';
 import 'package:picknow/providers/cart/order.dart';
+import 'package:picknow/providers/combo_provider.dart';
+import 'package:picknow/providers/product/latest_product_provider.dart';
+import 'package:picknow/providers/product/offer_provider.dart';
 import 'package:picknow/providers/product/product_detail_provider.dart';
 import 'package:picknow/providers/product/product_list_provider.dart';
 import 'package:picknow/providers/profile/userprofile_provider.dart';
@@ -68,17 +71,22 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => ProductListProvider()),
         ChangeNotifierProvider(create: (_) => ProductDetailProvider()),
-        ChangeNotifierProvider(create: (context) => CategoryProvider()),
-        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => CategoryProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => ComboListProvider()),
         ChangeNotifierProvider(create: (_) => SubCategoryProvider()),
         ChangeNotifierProvider(create: (_) => SearchProvider()),
         ChangeNotifierProvider(create: (_) => RelatedProductProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
-        ChangeNotifierProvider(create: (context) => ReviewProvider()),
+        ChangeNotifierProvider(create: (_) => ReviewProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
-         ChangeNotifierProvider(create: (_) => AddressProvider()),
-          ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => AddressProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => OfferProvider()),
+        ChangeNotifierProvider(create: (_) => LatestProductProvider()),
+        ChangeNotifierProvider(
+          create: (_) => ComboProvider(),
+        )
       ],
       child: Consumer<InternetConnectivity>(
         builder: (context, internetConnectivity, child) {
@@ -100,9 +108,11 @@ class _MyAppState extends State<MyApp> {
               fontFamily: "Lato",
             ),
             debugShowCheckedModeBanner: false,
-            home: internetConnectivity.isConnected
-                ? _initialScreen
-                : NoInternetScreen(),
+            home: Builder(
+              builder: (context) => internetConnectivity.isConnected
+                  ? _initialScreen
+                  : NoInternetScreen(),
+            ),
           );
         },
       ),

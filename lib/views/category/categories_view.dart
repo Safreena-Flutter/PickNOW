@@ -112,9 +112,10 @@ class _CategoryPageState extends State<CategoryPage> {
       width: mediaquerywidth(0.24, context),
       color: AppColors.frost,
       child: ListView.builder(
-        itemCount: categories.length,
+        itemCount: categories.where((cat) => cat.status == 'active').length,
         itemBuilder: (context, index) {
-          final category = categories[index];
+          final activeCategories = categories.where((cat) => cat.status == 'active').toList();
+          final category = activeCategories[index];
           return buildCategoryNavItem(
             context: context,
             icon: category.images.isNotEmpty

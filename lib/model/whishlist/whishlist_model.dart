@@ -11,6 +11,7 @@ class WishlistModel {
     );
   }
 }
+
 class WishlistProduct {
   final String id;
   final String name;
@@ -19,6 +20,9 @@ class WishlistProduct {
   final String image;
   final String brand;
   final bool inStock;
+  final String variantId;
+  final VariantDetails variant;
+  final DateTime addedAt;
 
   WishlistProduct({
     required this.id,
@@ -28,6 +32,9 @@ class WishlistProduct {
     required this.image,
     required this.brand,
     required this.inStock,
+    required this.variantId,
+    required this.variant,
+    required this.addedAt,
   });
 
   factory WishlistProduct.fromJson(Map<String, dynamic> json) {
@@ -39,6 +46,44 @@ class WishlistProduct {
       image: json["pImage"],
       brand: json["pBrand"],
       inStock: json["inStock"],
+      variantId: json["variantId"],
+      variant: VariantDetails.fromJson(json["variant"]),
+      addedAt: DateTime.parse(json["addedAt"]),
+    );
+  }
+}
+
+class VariantDetails {
+  final String id;
+  final String size;
+  final String type;
+  final int stock;
+  final int price;
+  final int previousPrice;
+  final int offer;
+  final String status;
+
+  VariantDetails({
+    required this.id,
+    required this.size,
+    required this.type,
+    required this.stock,
+    required this.price,
+    required this.previousPrice,
+    required this.offer,
+    required this.status,
+  });
+
+  factory VariantDetails.fromJson(Map<String, dynamic> json) {
+    return VariantDetails(
+      id: json["_id"],
+      size: json["size"],
+      type: json["type"],
+      stock: json["stock"],
+      price: json["price"],
+      previousPrice: json["previousPrice"],
+      offer: json["offer"],
+      status: json["status"],
     );
   }
 }

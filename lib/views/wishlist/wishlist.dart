@@ -112,6 +112,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                     .addToCart(
                                   product.id,
                                   1,
+                                  product.variant.type,
+                                  product.variant.size,
+                                  product.variant.price,
+                                  product.variant.id
                                 );
                               },
                               icon: const Icon(Icons.shopping_bag,

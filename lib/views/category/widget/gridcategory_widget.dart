@@ -26,7 +26,7 @@ Widget buildSubCategoryCard(SubCategory subCategory, BuildContext context) {
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: subCategory.subCategories!.map((nestedSub) {
+          children: subCategory.subCategories.map((nestedSub) {
             debugPrint("nestedSub.image ${nestedSub.image}");
             debugPrint("nestedSub.id ${nestedSub.id}");
             return Padding(

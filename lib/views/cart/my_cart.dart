@@ -25,7 +25,7 @@ class ShoppingCart extends StatefulWidget {
 
 class _ShoppingCartState extends State<ShoppingCart> {
   int currentstep = 0;
-Address? selectedAddress;
+  Address? selectedAddress;
 
   void moveToNextStep() {
     setState(() {
@@ -36,31 +36,27 @@ Address? selectedAddress;
   }
 
   Widget _buildStepContent(
-      CartProvider cartprovider,
-      BuildContext contex,
-      double subtotal,
-      double tax,
-      double delivery,
-      double total) {
+      CartProvider cartprovider, BuildContext contex, double total) {
     switch (currentstep) {
       case 0:
-        return buildCartContent(
-            cartprovider, contex, subtotal, tax, delivery, total);
+        return buildCartContent(cartprovider, contex, total);
       case 1:
-        return  AddressScreen(
-        false,
-        onAddressSelected: (Address address) {
-          setState(() {
-            selectedAddress = address;
-            currentstep = 2;
-          });
-        },
-      );
+        return AddressScreen(
+          false,
+          onAddressSelected: (Address address) {
+            setState(() {
+              selectedAddress = address;
+              currentstep = 2;
+            });
+          },
+        );
       case 2:
-        return PaymentScreen(selectedAddress: selectedAddress!, total: total.round(),);
+        return PaymentScreen(
+          selectedAddress: selectedAddress!,
+          total: total.round(),
+        );
       default:
-        return buildCartContent(
-            cartprovider, contex, subtotal, tax, delivery, total);
+        return buildCartContent(cartprovider, contex, total);
     }
   }
 
@@ -70,17 +66,13 @@ Address? selectedAddress;
     Provider.of<CartProvider>(context, listen: false).loadCart();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
-    double subtotal = cartProvider.cart?.items
-            .fold(0, (sum, item) => sum! + (item.price * item.quantity)) ??
+    double subtotal = cartProvider.cart?.items.fold<double>(
+            0, (sum, item) => sum + ((item.price ?? 0) * item.quantity)) ??
         0;
-    double tax = subtotal * 0.04;
-    double deliveryCharge = subtotal > 500 ? 0 : 0;
-    double total = subtotal + tax + deliveryCharge;
+    double total = subtotal;
     return Scaffold(
       appBar: AppBar(
         leading: widget.isfromhome == true
@@ -133,12 +125,10 @@ Address? selectedAddress;
               },
               elevation: 0,
               physics: BouncingScrollPhysics(),
-
             ),
           ),
           Expanded(
-            child: _buildStepContent(cartProvider, context,
-                subtotal, tax, deliveryCharge, total),
+            child: _buildStepContent(cartProvider, context, total),
           ),
         ],
       ),

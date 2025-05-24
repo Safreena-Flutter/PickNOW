@@ -29,17 +29,23 @@ class SubCategoryService {
     }
   }
 
-  /// **Helper function to parse JSON list into SubCategory objects**
-  List<SubCategory> _parseSubCategories(List<dynamic> jsonList) {
-    return jsonList.map((json) {
-      return SubCategory(
-        id: json["_id"],
-        name: json["name"],
-        description: json['description'],
-        image: json["image"].startsWith("http")
-            ? json["image"]
-            : "https://res.cloudinary.com/dnwxrqvth/image/upload/${json["image"]}",
-      );
-    }).toList();
-  }
+List<SubCategory> _parseSubCategories(List<dynamic> jsonList) {
+  return jsonList.map((json) {
+    return SubCategory(
+      id: json["_id"] ?? '',
+      name: json["name"] ?? '',
+      description: json["description"] ?? '',
+      image: json["image"] != null && json["image"].toString().startsWith("http")
+          ? json["image"]
+          : "https://res.cloudinary.com/dnwxrqvth/image/upload/${json["image"]}",
+      status: json["status"] ?? '',
+      subCategories: json["subCategories"] != null
+          ? (json["subCategories"] as List)
+              .map((subJson) => SubSubCategory.fromJson(subJson))
+              .toList()
+          : [],
+    );
+  }).toList();
+}
+
 }

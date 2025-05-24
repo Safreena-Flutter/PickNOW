@@ -4,6 +4,7 @@ class CategoryModel {
   final String description;
   final List<String> images;
   final String status;
+  final int products;
   final List<SubCategory> subCategories;
 
   CategoryModel({
@@ -12,6 +13,7 @@ class CategoryModel {
     required this.description,
     required this.images,
     required this.status,
+    required this.products,
     required this.subCategories,
   });
 
@@ -20,15 +22,16 @@ class CategoryModel {
       id: json['_id'] ?? '',
       name: json['cName'] ?? '',
       description: json['cDescription'] ?? '',
-      images: json['cImage'] != null 
-        ? List<String>.from(json['cImage']) 
-        : [],
+      images: json['cImage'] != null
+          ? List<String>.from(json['cImage'])
+          : [],
       status: json['cStatus'] ?? '',
+      products: json['products'] ?? 0,
       subCategories: json['subCategories'] != null
-        ? (json['subCategories'] as List)
-            .map((subCat) => SubCategory.fromJson(subCat))
-            .toList()
-        : [],
+          ? (json['subCategories'] as List)
+              .map((subCat) => SubCategory.fromJson(subCat))
+              .toList()
+          : [],
     );
   }
 }
@@ -38,16 +41,16 @@ class SubCategory {
   final String name;
   final String description;
   final String image;
-  final String? status;
-  final List<SubSubCategory>? subCategories;
+  final String status;
+  final List<SubSubCategory> subCategories;
 
   SubCategory({
     required this.id,
     required this.name,
     required this.description,
     required this.image,
-     this.status,
-     this.subCategories,
+    required this.status,
+    required this.subCategories,
   });
 
   factory SubCategory.fromJson(Map<String, dynamic> json) {
@@ -58,10 +61,10 @@ class SubCategory {
       image: json['image'] ?? '',
       status: json['status'] ?? '',
       subCategories: json['subCategories'] != null
-        ? (json['subCategories'] as List)
-            .map((subSubCat) => SubSubCategory.fromJson(subSubCat))
-            .toList()
-        : [],
+          ? (json['subCategories'] as List)
+              .map((subSubCat) => SubSubCategory.fromJson(subSubCat))
+              .toList()
+          : [],
     );
   }
 }
@@ -91,21 +94,22 @@ class SubSubCategory {
     );
   }
 }
-class SubCategoryResponse {
-  bool success;
-  List<SubCategory> products;
 
+class CategoryResponse {
+  final bool success;
+  final List<CategoryModel> data;
 
-  SubCategoryResponse({
-  required this.success,
-    required this.products,
+  CategoryResponse({
+    required this.success,
+    required this.data,
   });
 
-  factory SubCategoryResponse.fromJson(Map<String, dynamic> json) {
-    return SubCategoryResponse(
+  factory CategoryResponse.fromJson(Map<String, dynamic> json) {
+    return CategoryResponse(
       success: json['success'],
-      products: List<SubCategory>.from(json['subCategories'].map((x) => SubCategory.fromJson(x))),
-    
+      data: (json['data'] as List)
+          .map((item) => CategoryModel.fromJson(item))
+          .toList(),
     );
   }
 }

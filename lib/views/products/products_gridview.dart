@@ -145,7 +145,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                           ),
                         ),
                       ),
-                      if (product.pOffer != 0)
+                       if ((product.variantDetails?.offer ?? product.pOffer) != 0)
                         Positioned(
                           top: 8,
                           left: 8,
@@ -157,7 +157,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                              '${product.pOffer}% OFF',
+                               '${product.variantDetails?.offer ?? product.pOffer}% OFF',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -169,16 +169,16 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                       Positioned(
                           top: 8,
                           right: 8,
-                          child: Consumer<WishlistProvider>(
-                            builder: (context, wishlistProvider, child) {
-                              bool isWishlisted =
-                                  wishlistProvider.isWishlisted(product.id);
-                              bool isLoading = wishlistProvider.isLoading(product
-                                  .id); // Get loading state for this product
+                          child: Builder(
+                            builder: (context) {
+                              final wishlistProvider = Provider.of<WishlistProvider>(context, listen: false);
+                              bool isWishlisted = wishlistProvider.isWishlisted(product.id);
+                              bool isLoading = wishlistProvider.isLoading(product.id);
 
                               return GestureDetector(
                                 onTap: () {
-                                  wishlistProvider.toggleWishlist(product.id);
+                                  final variantId = product.variantDetails?.id ?? product.id;
+                                  wishlistProvider.toggleWishlist(product.id, variantId);
                                 },
                                 child: isLoading
                                     ? const SizedBox(
@@ -217,17 +217,17 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                         Row(
                           children: [
                             Text(
-                              'Rs.${product.pPrice}',
+                              'Rs.${product.variantDetails?.price ?? product.pPrice}',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green[700],
                               ),
                             ),
-                            if (product.pPreviousPrice != 0) ...[
-                              const SizedBox(width: 4),
+                            if ((product.variantDetails?.previousPrice ?? product.pPreviousPrice) != 0) ...[
+                              const SizedBox(width: 8),
                               Text(
-                                'Rs.${product.pPreviousPrice.toString()}',
+                                'Rs.${product.variantDetails?.previousPrice ?? product.pPreviousPrice}',
                                 style: TextStyle(
                                   fontSize: 12,
                                   decoration: TextDecoration.lineThrough,

@@ -5,35 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/whishlist/whishlist_model.dart';
 
 class WishlistService {
-  Future<WishlistModel> addToWishlist(String productId) async {
-    final url =
-        Uri.parse("https://backmern.picknow.in/api/user/wishlist/$productId");
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('auth_token');
-
-    if (token == null) {
-      throw Exception("No authentication token found.");
-    }
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-      debugPrint('** ${response.statusCode}');
-      debugPrint('** ${response.body}');
-      
-      if (response.statusCode == 200) {
-        return WishlistModel.fromJson(json.decode(response.body));
-      } else {
-        throw Exception('Failed to add product to wishlist');
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
 
   final String baseUrl = "https://backmern.picknow.in/api/user/wishlist";
 
@@ -44,6 +15,7 @@ class WishlistService {
     if (token == null) {
       throw Exception("No authentication token found.");
     }
+    print('tokeenn $token');
     try {
       final response = await http.get(
         Uri.parse(baseUrl),

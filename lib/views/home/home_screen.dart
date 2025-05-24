@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:picknow/providers/product/offer_provider.dart';
+import 'package:picknow/providers/product/latest_product_provider.dart';
 import 'package:picknow/views/home/widgets/carosel.dart';
 import 'package:picknow/views/home/widgets/productlist.dart';
 import 'package:picknow/views/home/widgets/title.dart';
@@ -8,6 +10,7 @@ import 'package:picknow/views/home/widgets/vendors_list.dart';
 import 'package:picknow/views/widgets/customsizedbox.dart';
 import 'package:provider/provider.dart';
 //import 'package:video_player/video_player.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../providers/category/all_category.dart';
 import '../../providers/combo/combo_provider.dart';
 import 'widgets/category_widget.dart';
@@ -30,6 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<CategoryProvider>(context, listen: false).fetchCategories();
+      Provider.of<OfferProvider>(context, listen: false).fetchOfferProducts();
+      Provider.of<LatestProductProvider>(context, listen: false)
+          .fetchLatestProducts();
       context.read<ComboListProvider>().comboProducts(refresh: true);
       comboListProvider.comboProducts();
     });
@@ -75,8 +81,120 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
- //   _videoController.dispose();
+    //   _videoController.dispose();
     super.dispose();
+  }
+
+  Widget _buildShimmerSection() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Shimmer for section title
+          Container(
+            width: 150,
+            height: 24,
+            margin: const EdgeInsets.only(left: 16, bottom: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          // Shimmer for product list
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.34,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  margin: const EdgeInsets.symmetric(horizontal: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Shimmer for product image
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.45,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Shimmer for product name
+                            Container(
+                              width: double.infinity,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // Shimmer for weight
+                            Container(
+                              width: 60,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // Shimmer for price row
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 60,
+                                  height: 14,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                Container(
+                                  width: 40,
+                                  height: 12,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                Container(
+                                  width: 50,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -102,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context, comboProvider, child) {
                       if (comboProvider.isLoading &&
                           comboProvider.products.isEmpty) {
-                        return const Center(child: CircularProgressIndicator());
+                        return _buildShimmerSection();
                       }
 
                       if (comboProvider.error != null) {
@@ -117,11 +235,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'id': combo.id,
                                   'offer': combo.ccOffer,
                                   'name': combo.ccName,
-                                  'weight': combo.ccQuantity
-                                      .toString(), // Example weight
+                                  'weight': combo.ccQuantity.toString(),
                                   'price': combo.ccPrice,
                                   'originalPrice': combo.ccPrice,
                                   'imageUrl': combo.ccImage,
+                                  "varientid": combo.id
                                 })
                             .toList(),
                       );
@@ -130,41 +248,36 @@ class _HomeScreenState extends State<HomeScreen> {
                   CustomSizedBoxHeight(0.02),
                   Padding(
                     padding: const EdgeInsets.only(left: 16, bottom: 8),
-                    child: buildSectionTitle('Best Selling'),
+                    child: buildSectionTitle('Special Offers'),
                   ),
-                  FeaturedProductsList(
-                    products: [
-                      {
-                        'id': "haksfka",
-                        'offer': 10,
-                        'name': 'Almond/பாதாம்',
-                        'weight': '200 g',
-                        'price': 60,
-                        'originalPrice': 100,
-                        'imageUrl':
-                            'https://cdn.britannica.com/04/194904-050-1B92812A/Raw-Food-Almond-food-Nut-Snack.jpg',
-                      },
-                      {
-                        'id': "haksfka",
-                        'offer': 5,
-                        'name': 'Dry Kiwi/உலர் கிவி',
-                        'weight': '200 g',
-                        'price': 80,
-                        'originalPrice': 100,
-                        'imageUrl':
-                            'https://images.meesho.com/images/products/375414458/qcccm_512.webp',
-                      },
-                      {
-                        'id': "haksfka",
-                        'offer': 10,
-                        'name': "Bajra biscuit/கம்பு பிஸ்கட்",
-                        'weight': '100 g',
-                        'price': 60,
-                        'originalPrice': 90,
-                        'imageUrl':
-                            'https://m.media-amazon.com/images/I/71g7abt4RAL.jpg',
-                      },
-                    ],
+                  Consumer<OfferProvider>(
+                    builder: (context, offerProvider, child) {
+                      if (offerProvider.isLoading &&
+                          offerProvider.products.isEmpty) {
+                        return _buildShimmerSection();
+                      }
+
+                      if (offerProvider.error != null) {
+                        return Center(
+                            child: Text('Error: ${offerProvider.error}'));
+                      }
+
+                      return FeaturedProductsList(
+                        from: false,
+                        products: offerProvider.products
+                            .map((product) => {
+                                  'id': product.productId,
+                                  'offer': product.offer,
+                                  'name': product.pName,
+                                  'weight': product.size,
+                                  'price': product.price,
+                                  'originalPrice': product.previousPrice,
+                                  'imageUrl': product.pImage.first,
+                                  "varientid": product.variantId
+                                })
+                            .toList(),
+                      );
+                    },
                   ),
                   CustomSizedBoxHeight(0.02),
                   // Padding(
@@ -197,39 +310,36 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(left: 16, bottom: 8),
                     child: buildSectionTitle('Latest Products'),
                   ),
-                  FeaturedProductsList(
-                    products: [
-                      {
-                        'id': "haksfka",
-                        'offer': 10,
-                        'name': 'ABC malt/ஏபிசி மால்ட்',
-                        'weight': '500 g',
-                        'price': 150,
-                        'originalPrice': 200,
-                        'imageUrl':
-                            'https://dakshindelight.com/cdn/shop/files/DSC_1605.jpg?v=1713884178&width=1946',
-                      },
-                      {
-                        'id': "haksfka",
-                        'offer': 10,
-                        'name': 'Handmade Soaps/சோப்பு',
-                        'weight': '200 g',
-                        'price': 60,
-                        'originalPrice': 80,
-                        'imageUrl':
-                            'https://cdn.shopify.com/s/files/1/0490/1158/9282/files/sundarisilks-natural-handmade-soaps.png?v=1629446125',
-                      },
-                      {
-                        'id': "haksfka",
-                        'offer': 10,
-                        'name': "Cardamom/ஏலக்காய்",
-                        'weight': '100 g',
-                        'price': 60,
-                        'originalPrice': 90,
-                        'imageUrl':
-                            'https://www.greendna.in/cdn/shop/products/Cardamom_640x.png?v=1560959843',
-                      },
-                    ],
+                  Consumer<LatestProductProvider>(
+                    builder: (context, latestProvider, child) {
+                      if (latestProvider.isLoading &&
+                          latestProvider.products.isEmpty) {
+                        return _buildShimmerSection();
+                      }
+
+                      if (latestProvider.error != null) {
+                        return Center(
+                            child: Text('Error: ${latestProvider.error}'));
+                      }
+
+                      return FeaturedProductsList(
+                        from: false,
+                        products: latestProvider.products
+                            .where((product) => product.variantDetails != null)
+                            .map((product) => {
+                                  'id': product.id,
+                                  'offer': product.variantDetails!.offer,
+                                  'name': product.pName,
+                                  'weight': product.variantDetails!.size,
+                                  'price': product.variantDetails!.price,
+                                  'originalPrice':
+                                      product.variantDetails!.previousPrice,
+                                  'imageUrl': product.pImage.first,
+                                  "varientid": product.variantDetails!.id
+                                })
+                            .toList(),
+                      );
+                    },
                   ),
                   CustomSizedBoxHeight(0.02),
                   Padding(
@@ -272,8 +382,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  
-
 }
-

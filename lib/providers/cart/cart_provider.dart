@@ -12,9 +12,10 @@ class CartProvider with ChangeNotifier {
 
   CartModel? get cart => _cart;
   bool get isLoading => _isLoading;
-int get itemCount {
+  int get itemCount {
     return _cart?.items.length ?? 0;
   }
+
   Future<void> loadCart() async {
     _isLoading = true;
     notifyListeners();
@@ -30,43 +31,73 @@ int get itemCount {
     notifyListeners();
   }
 
-  Future<void> addToCart(String productId, int quantity) async {
-    final newCartItem = await _cartService.addToCart(productId, quantity);
+  Future<void> addToCart(String productId, int quantity, String variantType,
+      String variantvalue, int price, String variantid) async {
+    final newCartItem = await _cartService.addToCart(
+        productId, quantity, variantType, variantvalue, price, variantid);
     if (newCartItem != null) {
       _cart?.items.add(newCartItem);
       notifyListeners();
-       Fluttertoast.showToast(
-          msg: "Product added to cart",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-        );
+      Fluttertoast.showToast(
+        msg: "Product added to cart",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
     }
-
   }
 
-  Future<void> updateQuantity(int index, int newQuantity) async {
+  Future<void> updateQuantity(
+      int index,
+      int newQuantity,
+      String variantType,
+      String variantvalue,
+      num price,
+      String variantid,
+      String productid) async {
     if (_cart != null && index >= 0 && index < _cart!.items.length) {
       final item = _cart!.items[index];
 
-      bool success = await _cartService.updateCartItem(item.id, newQuantity);
+      bool success = await _cartService.updateCartItem(
+          productid, newQuantity, variantType, variantvalue, price, variantid);
       if (success) {
-        _cart!.items[index].quantity = newQuantity;
+        _cart!.items[index] = CartItem(
+          productId: item.productId,
+          name: item.name,
+          price: item.price,
+          quantity: newQuantity,
+          images: item.images,
+          stock: item.stock,
+          quantityInfo: item.quantityInfo,
+          offer: item.offer,
+          tax: item.tax,
+          variantType: variantType,
+          variantValue: variantvalue,
+          variantId: variantid,
+        );
         notifyListeners();
       }
     }
   }
 
-  Future<void> removeItem(int index) async {
+  Future<void> removeItem(int index, String productId, String variantId,
+      String variantType, String variantvalue) async {
     if (_cart != null && index >= 0 && index < _cart!.items.length) {
-      final itemId = _cart!.items[index].id;
-
-      bool success = await _cartService.deleteCartItem(itemId);
-      if (success) {
-        _cart!.items.removeAt(index);
-        notifyListeners();
+      try {
+        bool success = await _cartService.deleteCartItem(
+            productId, variantId, variantType, variantvalue);
+        if (success) {
+          _cart!.items.removeAt(index);
+          notifyListeners();
+          return;
+        }
+        throw Exception('Failed to delete item from backend');
+      } catch (error) {
+        debugPrint("Error removing item: $error");
+        throw error;
       }
     }
+    throw Exception('Invalid item index');
   }
 }

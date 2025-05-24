@@ -1,4 +1,3 @@
-
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import '../../model/whishlist/whishlist_model.dart';
 import 'package:http/http.dart' as http;
 import '../../services/whishlist/whishlist_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
 
 class WishlistProvider extends ChangeNotifier {
   final WishlistService _wishlistService = WishlistService();
@@ -23,7 +23,7 @@ class WishlistProvider extends ChangeNotifier {
   bool isLoading(String productId) => _loadingStatus[productId] ?? false;
 
   /// Toggle Wishlist (Add/Remove)
-  Future<void> toggleWishlist(String productId) async {
+  Future<void> toggleWishlist(String productId,String varientid) async {
     _loadingStatus[productId] = true;
     notifyListeners();
 
@@ -31,7 +31,7 @@ class WishlistProvider extends ChangeNotifier {
       if (isWishlisted(productId)) {
         await removeFromWishlist(productId);
       } else {
-        await addToWishlist(productId);
+        await addToWishlist(productId,varientid);
       }
     } catch (e) {
       debugPrint("Error: $e");
@@ -42,7 +42,7 @@ class WishlistProvider extends ChangeNotifier {
   }
 
   /// Add to Wishlist
-  Future<void> addToWishlist(String productId) async {
+  Future<void> addToWishlist(String productId, String varientid) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
@@ -58,22 +58,34 @@ class WishlistProvider extends ChangeNotifier {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
+        body: json.encode({
+          'variantId': varientid,
+        }),
       );
 
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
-        _wishlist.add(productId);
-        Fluttertoast.showToast(
-          msg: "Product added to wishlist",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-        );
+        final responseData = json.decode(response.body);
+        if (responseData['success'] == true) {
+          _wishlist.add(productId);
+          Fluttertoast.showToast(
+            msg: "Product added to wishlist",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
+        } else {
+          throw Exception(responseData['message'] ?? "Failed to add product to wishlist");
+        }
       } else {
         throw Exception("Failed to add product to wishlist");
       }
     } catch (e) {
-      debugPrint("Error: $e");
+      debugPrint("Error adding to wishlist: $e");
+      rethrow;
     }
 
     notifyListeners();
@@ -124,7 +136,8 @@ class WishlistProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _wishlistProducts = await _wishlistService.fetchWishlist();
+      final response = await _wishlistService.fetchWishlist();
+      _wishlistProducts = response;
       _wishlist.clear();
       for (var product in _wishlistProducts) {
         _wishlist.add(product.id);

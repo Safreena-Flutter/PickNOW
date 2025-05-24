@@ -1,6 +1,8 @@
+import 'package:picknow/model/products/latest_product_model.dart';
+
 class ProductResponse {
-  bool success;
-  List<Product> products;
+  final bool success;
+  final List<Product> products;
 
   ProductResponse({
     required this.success,
@@ -10,7 +12,9 @@ class ProductResponse {
   factory ProductResponse.fromJson(Map<String, dynamic> json) {
     return ProductResponse(
       success: json['success'],
-      products: List<Product>.from(json['products'].map((x) => Product.fromJson(x))),
+      products: List<Product>.from(
+        json['products'].map((x) => Product.fromJson(x)),
+      ),
     );
   }
 }
@@ -33,20 +37,20 @@ class ProductDetailResponse {
 }
 
 class Product {
-  String id;
-  String pName;
-  String pShortDescription;
-  String pDescription;
+  final String id;
+  final String pName;
+  final String pShortDescription;
+  final String pDescription;
   int? pPrice;
   int? pPreviousPrice;
   int? pSold;
   String? pQuantity;
-  String? pCategory;
-  String? pSubCategory;
-  String? pNestedSubCategory;
+  final String pCategory;
+  final String pSubCategory;
+  final String pNestedSubCategory;
   int? pStock;
-  List<String> pImage;
-  String? pBrand;
+  final List<String> pImage;
+  final String pBrand;
   int? pOffer;
   int? pTax;
   String? pStatus;
@@ -56,6 +60,8 @@ class Product {
   int? v;
   String? type;
   String? option;
+  final List<String> variants;
+  VariantDetails? variantDetails;
 
   Product({
     required this.id,
@@ -66,12 +72,12 @@ class Product {
     this.pPreviousPrice,
     this.pSold,
     this.pQuantity,
-    this.pCategory,
-    this.pSubCategory,
-    this.pNestedSubCategory,
+    required this.pCategory,
+    required this.pSubCategory,
+    required this.pNestedSubCategory,
     this.pStock,
     required this.pImage,
-    this.pBrand,
+    required this.pBrand,
     this.pOffer,
     this.pTax,
     this.pStatus,
@@ -81,6 +87,8 @@ class Product {
     this.v,
     this.type,
     this.option,
+    required this.variants,
+    this.variantDetails,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -112,6 +120,7 @@ class Product {
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       v: json['__v'],
+      variants: List<String>.from(json['variants']),
     );
   }
 }

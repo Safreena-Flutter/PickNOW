@@ -5,6 +5,7 @@ import 'package:picknow/core/utils/convert_date.dart';
 import 'package:picknow/model/products/product_details_model.dart';
 import 'package:picknow/views/products/widget/product_imageview.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../providers/cart/cart_provider.dart';
 import '../../providers/combo/combo_provider.dart';
 import '../../providers/product/product_detail_provider.dart';
@@ -41,7 +42,15 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProductDetailProvider>().fetchProductDetails(widget.id);
+      context.read<ProductDetailProvider>().fetchProductDetails(widget.id).then((_) {
+        // Set the default variant when product details are loaded
+        final provider = context.read<ProductDetailProvider>();
+        if (provider.productDetail != null && provider.productDetail!.product.variants.isNotEmpty) {
+          setState(() {
+            selectedVariant = provider.productDetail!.product.variants.first;
+          });
+        }
+      });
       Provider.of<RelatedProductProvider>(context, listen: false)
           .fetchRelatedProducts(widget.id);
       Provider.of<ReviewProvider>(context, listen: false)
@@ -54,7 +63,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
     return Consumer<ProductDetailProvider>(
       builder: (context, provider, child) {
         if (provider.isLoading) {
-          return Center(child: CircularProgressIndicator());
+          return _buildShimmerLoading();
         }
 
         final product = provider.productDetail!.product;
@@ -128,7 +137,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
 
                               return GestureDetector(
                                 onTap: () {
-                                  wishlistProvider.toggleWishlist(product.id);
+                                  wishlistProvider.toggleWishlist(product.id,product.variants.first.id);
                                   
                                 },
                                 child: isLoading
@@ -268,10 +277,10 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                         },
                         child: Column(
                           children: [
-                            DetailRow(label: 'Brand', value: product.brand ?? ""),
+                            DetailRow(label: 'Brand', value: product.brand ),
                             DetailRow(
                                 label: 'Net Quantity',
-                                value: product.variants.first.size?? ""),
+                                value: product.variants.first.size),
                           ],
                         ),
                       ),
@@ -364,7 +373,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                         return Center(
                             child: Text('Error: ${relatedprovider.error}'));
                       }
-
+final variant = selectedVariant ?? product.variants.first;
                       return FeaturedProductsList(
                         from: false,
                         products: relatedprovider.relatedProducts
@@ -376,6 +385,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                                   'price': product.price,
                                   'originalPrice': product.previousPrice,
                                   'imageUrl': product.images.first,
+                                    "varientid":variant.id,
                                 })
                             .toList(),
                       );
@@ -400,12 +410,18 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
               children: [
                 Expanded(
                   child: GestureDetector(
-                    onTap: () =>
-                        Provider.of<CartProvider>(context, listen: false)
-                            .addToCart(
-                      selectedVariant?.id ?? widget.id,
-                      quantity,
-                    ),
+                    onTap: () {
+                      final variant = selectedVariant ?? product.variants.first;
+                      Provider.of<CartProvider>(context, listen: false)
+                          .addToCart(
+                        widget.id,
+                        quantity,
+                        variant.type,
+                        variant.size,
+                        variant.price,
+                        variant.id,
+                      );
+                    },
                     child: Container(
                       height: 56,
                       margin: EdgeInsets.only(right: 12),
@@ -459,6 +475,226 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
           ),
         );
       },
+    );
+  }
+
+  Widget _buildShimmerLoading() {
+    return Scaffold(
+      appBar: customAppbar(context, ''),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Shimmer for Image Carousel
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 300,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Shimmer for Product Name and Rating
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 200,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 100,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // Shimmer for Price and Offer
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 120,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 80,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // Shimmer for Variants
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: 120,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                children: List.generate(
+                  3,
+                  (index) => Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 80,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Shimmer for Shipping Info
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Shimmer for Product Information
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: 180,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Shimmer for Details Section
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -571,11 +807,4 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
     });
   }
 
-  void _updateQuantity(int newQuantity) {
-    if (newQuantity > 0 && selectedVariant != null && newQuantity <= selectedVariant!.stock) {
-      setState(() {
-        quantity = newQuantity;
-      });
-    }
-  }
 }

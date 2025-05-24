@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:picknow/core/costants/navigation/navigation.dart';
+import 'package:picknow/screens/combo_detail_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../providers/whishlist/whishlist_provider.dart';
 import '../../products/detailed_page.dart';
 
@@ -19,10 +21,14 @@ class FeaturedProductsList extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: products.length,
+        itemCount: products.isEmpty ? 3 : products.length,
         itemBuilder: (context, index) {
+          if (products.isEmpty) {
+            return _buildShimmerCard(context);
+          }
           final product = products[index];
           return ProductCard(
+            iscombo: from ?? false,
             id: product['id'],
             offer: product['offer'],
             productName: product['name'],
@@ -30,8 +36,102 @@ class FeaturedProductsList extends StatelessWidget {
             price: product['price'],
             originalPrice: product['originalPrice'],
             imageUrl: product['imageUrl'],
+            varientid: product['varientid'],
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildShimmerCard(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double imageHeight = screenWidth * 0.45;
+    double cardWidth = screenWidth * 0.45;
+
+    return Container(
+      width: cardWidth,
+      margin: const EdgeInsets.symmetric(horizontal: 6),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.withOpacity(0.2)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Shimmer for image
+              Container(
+                height: imageHeight,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Shimmer for product name
+                    Container(
+                      width: double.infinity,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Shimmer for weight
+                    Container(
+                      width: 60,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Shimmer for price row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 14,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        Container(
+                          width: 40,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        Container(
+                          width: 50,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -47,16 +147,20 @@ class ProductCard extends StatelessWidget {
   final String? rating;
   final String? reviews;
   final int offer;
+  final bool iscombo;
+  final String varientid;
 
   const ProductCard({
     super.key,
     required this.id,
+    required this.iscombo,
     required this.productName,
     required this.productWeight,
     required this.price,
     required this.originalPrice,
     required this.imageUrl,
     required this.offer,
+    required this.varientid,
     this.rating,
     this.reviews,
   });
@@ -66,14 +170,19 @@ class ProductCard extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double imageHeight = screenWidth * 0.45;
     double cardWidth = screenWidth * 0.45;
+
     return Container(
       width: cardWidth,
       margin: const EdgeInsets.symmetric(horizontal: 6),
       child: GestureDetector(
         onTap: () {
-          PageNavigations().push(PremiumProductDetailPage(
-            id: id,
-          ));
+          iscombo
+              ? PageNavigations().push(ComboDetailScreen(
+                  comboId: id,
+                ))
+              : PageNavigations().push(PremiumProductDetailPage(
+                  id: id,
+                ));
         },
         child: Container(
           decoration: BoxDecoration(
@@ -100,6 +209,26 @@ class ProductCard extends StatelessWidget {
                       height: imageHeight,
                       width: double.infinity,
                       fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            height: imageHeight,
+                            width: double.infinity,
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: imageHeight,
+                          width: double.infinity,
+                          color: Colors.grey[200],
+                          child: const Icon(Icons.error_outline),
+                        );
+                      },
                     ),
                   ),
                   Positioned(
@@ -111,7 +240,7 @@ class ProductCard extends StatelessWidget {
                         bool isLoading = wishlistProvider.isLoading(id);
                         return GestureDetector(
                           onTap: () {
-                            wishlistProvider.toggleWishlist(id);
+                            wishlistProvider.toggleWishlist(id, varientid);
                           },
                           child: isLoading
                               ? const SizedBox(
