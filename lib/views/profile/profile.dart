@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:picknow/core/costants/theme/appcolors.dart';
 import 'package:picknow/providers/profile/userprofile_provider.dart';
+import 'package:picknow/providers/whishlist/whishlist_provider.dart';
 import 'package:picknow/views/authentication/signin_screen.dart';
 import 'package:picknow/views/profile/edit_profile.dart';
 import 'package:picknow/views/widgets/customsizedbox.dart';
@@ -48,11 +49,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     }
   }
-@override
-void didChangeDependencies() {
-  super.didChangeDependencies();
-  _loadProfileImage();  // Reload profile image when dependencies change
-}
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadProfileImage(); // Reload profile image when dependencies change
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<ProfileProvider>(context);
@@ -67,11 +70,15 @@ void didChangeDependencies() {
             padding: const EdgeInsets.only(right: 10),
             child: Row(
               children: [
-                IconButton(
+                Consumer<WishlistProvider>(
+                  builder: (_, wishlist, __) => buildAnimatedIconButton(
+                    Icons.favorite_border,
+                    badge: wishlist.wishlist.length.toString(),
                     onPressed: () {
                       PageNavigations().push(WishlistScreen());
                     },
-                    icon: Icon(Icons.favorite_border)),
+                  ),
+                ),
                 Consumer<CartProvider>(
                   builder: (_, cart, __) => buildAnimatedIconButton(
                     Icons.shopping_cart_outlined,
@@ -230,7 +237,7 @@ void didChangeDependencies() {
                 color: AppColors.grey,
               ),
               onTap: () {
-               // PageNavigations().push(AddressScreen(widget.address, true, ));
+                // PageNavigations().push(AddressScreen(widget.address, true, ));
               },
             ),
             ListTile(

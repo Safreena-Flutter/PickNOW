@@ -24,7 +24,6 @@ class SubCategoryScreen extends StatefulWidget {
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
   @override
   void initState() {
-
     super.initState();
     Provider.of<SubCategoryProvider>(context, listen: false)
         .loadSubCategories(widget.categoryId);
@@ -36,47 +35,47 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
     final subCategories = provider.subCategories;
 
     return Scaffold(
-  appBar: customAppbar(context, widget.title),
-  body: SingleChildScrollView(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        provider.isLoading
-            ? _buildShimmerGrid() // Keep shimmer as it is
-            : subCategories.isEmpty
-                ? const Center(child: Text("No subcategories found"))
-                : Padding(
-                    padding: const EdgeInsets.only(left: 12.0, right: 12, top: 12),
-                    child: SizedBox(
-                      height: 140, // Fix height for horizontal ListView
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: subCategories.length,
-                        itemBuilder: (context, index) {
-                          final subCategory = subCategories[index];
-                          return _buildSubCategoryCard(subCategory);
-                        },
+      appBar: customAppbar(context, widget.title),
+      body: Column(
+        children: [
+          // Subcategories Section
+          provider.isLoading
+              ? _buildShimmerGrid()
+              : subCategories.isEmpty
+                  ? const Center(child: Text("No subcategories found"))
+                  : Padding(
+                      padding: const EdgeInsets.only(left: 12.0, right: 12, top: 12),
+                      child: SizedBox(
+                        height: 140,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: subCategories.length,
+                          itemBuilder: (context, index) {
+                            final subCategory = subCategories[index];
+                            return _buildSubCategoryCard(subCategory);
+                          },
+                        ),
                       ),
                     ),
-                  ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: buildSectionTitle('Recommended Products'),
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          //height: MediaQuery.of(context).size.height * 0.9, // Define height
-          child: ProductsGridview(
-            categoryname: widget.title,
-            isfromcatogory: false,
-           categoryId: widget.categoryId,
+          
+          // Recommended Products Section
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0, top: 16),
+            child: buildSectionTitle('Recommended Products'),
           ),
-        ),
-      ],
-    ),
-  ),
-);
-
+          const SizedBox(height: 8),
+          
+          // Products Grid
+          Expanded(
+            child: ProductsGridview(
+              categoryname: widget.title,
+              isfromcatogory: false,
+              categoryId: widget.categoryId,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// **SubCategory Card**
@@ -84,10 +83,10 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: GestureDetector(
-         onTap: () => PageNavigations().push(Productsview(
-          categoryid:subCategory.id ,
-        name: subCategory.name,
-         )) ,
+        onTap: () => PageNavigations().push(Productsview(
+          categoryid: subCategory.id,
+          name: subCategory.name,
+        )),
         child: AnimatedContainer(
           width: mediaquerywidth(0.35, context),
           duration: const Duration(seconds: 1),
@@ -104,7 +103,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                 Colors.amber,
                 Colors.orange
               ],
-              stops: [0.0, 0.5, 1.0, 0.0],
+              stops: const [0.0, 0.5, 1.0, 0.0],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               tileMode: TileMode.mirror,
@@ -137,19 +136,18 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black
-                          .withOpacity(0.3), // Semi-transparent background
+                      color: Colors.black.withOpacity(0.3),
                     ),
                     child: Text(
                       subCategory.name,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
-                        color: Colors.white, // White text for better visibility
+                        color: Colors.white,
                         fontSize: 15,
                       ),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis, // Avoid overflow issues
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
@@ -163,19 +161,23 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
 
   /// **Shimmer Loading Effect**
   Widget _buildShimmerGrid() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return SizedBox(
+      height: 140,
       child: ListView.builder(
-        itemCount: 6, // Number of shimmer items
+        scrollDirection: Axis.horizontal,
+        itemCount: 6,
         itemBuilder: (context, index) {
-          return Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[300]!, width: 2),
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
+          return Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: mediaquerywidth(0.35, context),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
           );

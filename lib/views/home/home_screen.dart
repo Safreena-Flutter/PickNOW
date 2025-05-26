@@ -237,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'name': combo.ccName,
                                   'weight': combo.ccQuantity.toString(),
                                   'price': combo.ccPrice,
-                                  'originalPrice': combo.ccPrice,
+                                  'originalPrice': 0,
                                   'imageUrl': combo.ccImage,
                                   "varientid": combo.id
                                 })

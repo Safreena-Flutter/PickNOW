@@ -6,6 +6,7 @@ import 'package:picknow/model/products/product_details_model.dart';
 import 'package:picknow/views/products/widget/product_imageview.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../providers/cart/cart_provider.dart';
 import '../../providers/combo/combo_provider.dart';
 import '../../providers/product/product_detail_provider.dart';
@@ -42,10 +43,14 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProductDetailProvider>().fetchProductDetails(widget.id).then((_) {
+      context
+          .read<ProductDetailProvider>()
+          .fetchProductDetails(widget.id)
+          .then((_) {
         // Set the default variant when product details are loaded
         final provider = context.read<ProductDetailProvider>();
-        if (provider.productDetail != null && provider.productDetail!.product.variants.isNotEmpty) {
+        if (provider.productDetail != null &&
+            provider.productDetail!.product.variants.isNotEmpty) {
           setState(() {
             selectedVariant = provider.productDetail!.product.variants.first;
           });
@@ -79,7 +84,9 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 ProductImageCarousel(images: product.images,),
+                  ProductImageCarousel(
+                    images: product.images,
+                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -92,9 +99,9 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                           Text(
                             product.name,
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis),
                           ),
                           SizedBox(height: 12),
                           Row(
@@ -126,50 +133,6 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Consumer<WishlistProvider>(
-                            builder: (context, wishlistProvider, child) {
-                              bool isWishlisted =
-                                  wishlistProvider.isWishlisted(product.id);
-                              bool isLoading = wishlistProvider.isLoading(product
-                                  .id); // Get loading state for this product
-
-                              return GestureDetector(
-                                onTap: () {
-                                  wishlistProvider.toggleWishlist(product.id,product.variants.first.id);
-                                  
-                                },
-                                child: isLoading
-                                    ? const SizedBox(
-                                        width: 24,
-                                        height: 24,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Icon(
-                                        isWishlisted
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color: isWishlisted
-                                            ? Colors.red
-                                            : Colors.grey,
-                                      ),
-                              );
-                            },
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                //   PageNavigations().push(WishlistScreen());
-                              },
-                              icon: Icon(
-                                Icons.share,
-                                color: AppColors.grey,
-                              )),
-                        ],
-                      )
                     ],
                   ),
                   SizedBox(height: 20),
@@ -242,8 +205,11 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                           backgroundColor: Colors.grey[200],
                           selectedColor: Colors.green[100],
                           labelStyle: TextStyle(
-                            color: isSelected ? Colors.green[800] : Colors.black,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color:
+                                isSelected ? Colors.green[800] : Colors.black,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         );
                       }).toList(),
@@ -277,7 +243,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                         },
                         child: Column(
                           children: [
-                            DetailRow(label: 'Brand', value: product.brand ),
+                            DetailRow(label: 'Brand', value: product.brand),
                             DetailRow(
                                 label: 'Net Quantity',
                                 value: product.variants.first.size),
@@ -373,7 +339,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                         return Center(
                             child: Text('Error: ${relatedprovider.error}'));
                       }
-final variant = selectedVariant ?? product.variants.first;
+                      final variant = selectedVariant ?? product.variants.first;
                       return FeaturedProductsList(
                         from: false,
                         products: relatedprovider.relatedProducts
@@ -385,7 +351,7 @@ final variant = selectedVariant ?? product.variants.first;
                                   'price': product.price,
                                   'originalPrice': product.previousPrice,
                                   'imageUrl': product.images.first,
-                                    "varientid":variant.id,
+                                  "varientid": variant.id,
                                 })
                             .toList(),
                       );
@@ -408,66 +374,137 @@ final variant = selectedVariant ?? product.variants.first;
             ),
             child: Row(
               children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      final variant = selectedVariant ?? product.variants.first;
-                      Provider.of<CartProvider>(context, listen: false)
-                          .addToCart(
-                        widget.id,
-                        quantity,
-                        variant.type,
-                        variant.size,
-                        variant.price,
-                        variant.id,
-                      );
-                    },
-                    child: Container(
-                      height: 56,
-                      margin: EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.shopping_cart_outlined),
-                          SizedBox(width: 8),
-                          Text(
-                            'Add to Cart',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                // Like and Share Buttons
+                Row(
+                  children: [
+                    Consumer<WishlistProvider>(
+                      builder: (context, wishlistProvider, child) {
+                        bool isWishlisted =
+                            wishlistProvider.isWishlisted(widget.id);
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+                              wishlistProvider.toggleWishlist(
+                                  widget.id, product.variants.first.id);
+                            },
+                            icon: Icon(
+                              isWishlisted
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isWishlisted ? Colors.red : Colors.grey,
                             ),
                           ),
-                        ],
+                        );
+                      },
+                    ),
+                    SizedBox(width: 8),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: IconButton(
+                        onPressed: () async {
+                          try {
+                            final variant = selectedVariant ?? product.variants.first;
+                            final shareText = '''
+Check out this amazing product on PickNow!
+
+${product.name}
+Price: ₹${variant.price}
+${product.offer != 0 ? 'Offer: ${product.offer}% OFF' : ''}
+${variant.size}
+
+Download PickNow app to view more details and make a purchase!
+''';
+                            await Share.share(shareText);
+                          } catch (e) {
+                            // Show a snackbar or toast message if sharing fails
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Unable to share at this moment. Please try again later.'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                        },
+                        icon: Icon(
+                          Icons.share_outlined,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
+                SizedBox(width: 12),
+                // Cart Button
                 Expanded(
-                  child: Container(
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.flash_on, color: Colors.white),
-                        SizedBox(width: 8),
-                        Text(
-                          'Buy Now',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                  child: Consumer<CartProvider>(
+                    builder: (context, cartProvider, child) {
+                      final variant = selectedVariant ?? product.variants.first;
+                      final bool inCart = cartProvider.cart?.items.any((item) =>
+                              item.productId == widget.id &&
+                              item.variantId == variant.id) ??
+                          false;
+
+                      return GestureDetector(
+                        onTap: inCart
+                            ? null
+                            : () {
+                                cartProvider.addToCart(
+                                  widget.id,
+                                  quantity,
+                                  variant.type,
+                                  variant.size,
+                                  variant.price,
+                                  variant.id,
+                                );
+                              },
+                        child: Container(
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: inCart
+                                ? Colors.grey.withOpacity(0.3)
+                                : Colors.orange,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: inCart
+                                ? []
+                                : [
+                                    BoxShadow(
+                                      color: Colors.orange.withOpacity(0.3),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                inCart
+                                    ? Icons.check
+                                    : Icons.shopping_cart_outlined,
+                                color: inCart ? Colors.grey : Colors.white,
+                                size: 24,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                inCart ? 'Added to Cart' : 'Add to Cart',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: inCart ? Colors.grey : Colors.white,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -598,8 +635,6 @@ final variant = selectedVariant ?? product.variants.first;
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Shimmer for Shipping Info
               Shimmer.fromColors(
                 baseColor: Colors.grey[300]!,
                 highlightColor: Colors.grey[100]!,
@@ -740,13 +775,13 @@ final variant = selectedVariant ?? product.variants.first;
             subtitle: '100% secure payment',
             color: Colors.green.shade700,
           ),
-          const SizedBox(height: 14),
-          _buildFeatureCard(
-            icon: Icons.refresh,
-            title: 'Easy Returns',
-            subtitle: '7 day return policy',
-            color: Colors.grey.shade700,
-          ),
+          // const SizedBox(height: 14),
+          // _buildFeatureCard(
+          //   icon: Icons.refresh,
+          //   title: 'Easy Returns',
+          //   subtitle: '7 day return policy',
+          //   color: Colors.grey.shade700,
+          // ),
         ],
       ),
     );
@@ -806,5 +841,4 @@ final variant = selectedVariant ?? product.variants.first;
       quantity = 1; // Reset quantity when variant changes
     });
   }
-
 }

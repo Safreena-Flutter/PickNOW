@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:picknow/core/costants/mediaquery/mediaquery.dart';
 import 'package:picknow/core/costants/navigation/navigation.dart';
 import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/providers/whishlist/whishlist_provider.dart';
 import 'package:picknow/views/category/widget/category_iconwidget.dart';
 import 'package:picknow/views/category/widget/shimmer_widget.dart';
 import 'package:picknow/views/wishlist/wishlist.dart';
@@ -25,6 +26,7 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   int _selectedIndex = 0;
+  List<CategoryModel> _activeCategories = [];
 
   @override
   void initState() {
@@ -59,11 +61,14 @@ class _CategoryPageState extends State<CategoryPage> {
               ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () {
-              PageNavigations().push(WishlistScreen());
-            },
+          Consumer<WishlistProvider>(
+            builder: (_, wishlist, __) => buildAnimatedIconButton(
+              Icons.favorite_border,
+              badge: wishlist.wishlist.length.toString(),
+              onPressed: () {
+                PageNavigations().push(WishlistScreen());
+              },
+            ),
           ),
           Consumer<CartProvider>(
             builder: (_, cart, __) => buildAnimatedIconButton(
@@ -95,11 +100,21 @@ class _CategoryPageState extends State<CategoryPage> {
             return const Center(child: Text('No categories found'));
           }
 
+          // Update active categories list
+          _activeCategories = categoryProvider.categories
+              .where((cat) => cat.status == 'active')
+              .toList();
+
+          // Ensure selected index is valid
+          if (_selectedIndex >= _activeCategories.length) {
+            _selectedIndex = 0;
+          }
+
           return Row(
             children: [
-              _buildCategorySidebar(categoryProvider.categories),
+              _buildCategorySidebar(),
               const VerticalDivider(width: 1, thickness: 0.5),
-              _buildCategoryGrid(categoryProvider.categories[_selectedIndex]),
+              _buildCategoryGrid(_activeCategories[_selectedIndex]),
             ],
           );
         },
@@ -107,15 +122,14 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  Widget _buildCategorySidebar(List<CategoryModel> categories) {
+  Widget _buildCategorySidebar() {
     return Container(
       width: mediaquerywidth(0.24, context),
       color: AppColors.frost,
       child: ListView.builder(
-        itemCount: categories.where((cat) => cat.status == 'active').length,
+        itemCount: _activeCategories.length,
         itemBuilder: (context, index) {
-          final activeCategories = categories.where((cat) => cat.status == 'active').toList();
-          final category = activeCategories[index];
+          final category = _activeCategories[index];
           return buildCategoryNavItem(
             context: context,
             icon: category.images.isNotEmpty
@@ -157,7 +171,10 @@ class _CategoryPageState extends State<CategoryPage> {
                 itemCount: selectedCategory.subCategories.length,
                 itemBuilder: (context, index) {
                   final subCategory = selectedCategory.subCategories[index];
-                  return buildSubCategoryCard(subCategory, context);
+                  if (subCategory.status == 'active') {
+                    return buildSubCategoryCard(subCategory, context);
+                  }
+                  return const SizedBox.shrink();
                 },
               ),
             ),

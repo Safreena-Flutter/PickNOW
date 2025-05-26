@@ -8,7 +8,7 @@ class ComboService {
   Future<ComboModel> getComboDetails(String comboId) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/combo/$comboId'));
-
+print('body ${response.body}');
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['success'] == true) {

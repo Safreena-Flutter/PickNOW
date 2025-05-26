@@ -19,6 +19,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
   void initState() {
     super.initState();
     Provider.of<WishlistProvider>(context, listen: false).loadWishlist();
+    Provider.of<CartProvider>(context, listen: false).loadCart();
+  }
+
+  bool isProductInCart(CartProvider cartProvider, String productId, String variantId) {
+    if (cartProvider.cart == null) return false;
+    return cartProvider.cart!.items.any((item) => 
+      item.productId == productId && item.variantId == variantId);
   }
 
   @override
@@ -26,8 +33,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
     return Scaffold(
       appBar: customAppbar(context, 'Whishlist',),
       
-      body: Consumer<WishlistProvider>(
-        builder: (context, wishlistProvider, child) {
+      body: Consumer2<WishlistProvider, CartProvider>(
+        builder: (context, wishlistProvider, cartProvider, child) {
           if (wishlistProvider.isLoadingProducts) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -48,6 +55,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
               ),
               itemBuilder: (context, index) {
                 final product = wishlistProvider.wishlist[index];
+                final bool inCart = isProductInCart(cartProvider, product.id, product.variant.id);
 
                 return GestureDetector(
                   onTap: () => PageNavigations().push(PremiumProductDetailPage(id: product.id)),
@@ -106,8 +114,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                               },
                             ),
                             ElevatedButton.icon(
-                              
-                              onPressed: () {
+                              onPressed: inCart ? null : () {
                                 Provider.of<CartProvider>(context, listen: false)
                                     .addToCart(
                                   product.id,
@@ -118,14 +125,20 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                   product.variant.id
                                 );
                               },
-                              icon: const Icon(Icons.shopping_bag,
-                                  color: Colors.white, size: 18),
-                              label: Text("Add",
-                                  style: TextStyle(
-                                      fontSize: 14, fontWeight: FontWeight.bold)),
+                              icon: Icon(
+                                inCart ? Icons.check : Icons.shopping_bag,
+                                color: Colors.white,
+                                size: 18
+                              ),
+                              label: Text(
+                                inCart ? "Added" : "Add",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold
+                                )
+                              ),
                               style: ElevatedButton.styleFrom(
-                            
-                                backgroundColor: AppColors.orange,
+                                backgroundColor: inCart ? Colors.grey : AppColors.orange,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),

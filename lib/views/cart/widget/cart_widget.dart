@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:picknow/core/costants/navigation/navigation.dart';
 import 'package:picknow/views/products/detailed_page.dart';
-
 import '../../../core/costants/theme/appcolors.dart';
 import '../../../providers/cart/cart_provider.dart';
 

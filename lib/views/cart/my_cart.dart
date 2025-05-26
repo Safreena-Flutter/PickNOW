@@ -1,7 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:picknow/providers/whishlist/whishlist_provider.dart';
 import 'package:picknow/views/cart/address.dart';
+import 'package:picknow/views/category/widget/category_iconwidget.dart';
 import 'package:provider/provider.dart';
 import '../../core/costants/navigation/navigation.dart';
 import '../../model/address/address.dart';
@@ -99,11 +101,17 @@ class _ShoppingCartState extends State<ShoppingCart> {
                     PageNavigations().push(SearchScreen());
                   },
                   icon: Icon(Icons.search)),
-              IconButton(
-                  onPressed: () {
-                    PageNavigations().push(WishlistScreen());
-                  },
-                  icon: Icon(Icons.favorite_border))
+              Consumer<WishlistProvider>(
+                                      builder: (_, wishlist, __) =>
+                                          buildAnimatedIconButton(
+                                        Icons.favorite_border,
+                                        badge: wishlist.wishlist.length.toString(),
+                                        onPressed: () {
+                                          PageNavigations()
+                                              .push(WishlistScreen());
+                                        },
+                                      ),
+                                    ),
             ],
           )
         ],

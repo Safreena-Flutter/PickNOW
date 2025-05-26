@@ -15,7 +15,8 @@ class FeaturedProductsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double containerHeight = MediaQuery.of(context).size.height * (from == true ? 0.32 : 0.34);
+    double containerHeight =
+        MediaQuery.of(context).size.height * (from == true ? 0.32 : 0.34);
     return SizedBox(
       height: containerHeight,
       child: ListView.builder(
@@ -203,7 +204,8 @@ class ProductCard extends StatelessWidget {
               Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(8)),
                     child: Image.network(
                       imageUrl,
                       height: imageHeight,
@@ -231,34 +233,42 @@ class ProductCard extends StatelessWidget {
                       },
                     ),
                   ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: Consumer<WishlistProvider>(
-                      builder: (context, wishlistProvider, child) {
-                        bool isWishlisted = wishlistProvider.isWishlisted(id);
-                        bool isLoading = wishlistProvider.isLoading(id);
-                        return GestureDetector(
-                          onTap: () {
-                            wishlistProvider.toggleWishlist(id, varientid);
-                          },
-                          child: isLoading
-                              ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : Icon(
-                                  isWishlisted ? Icons.favorite : Icons.favorite_border,
-                                  color: isWishlisted ? Colors.red : Colors.white,
-                                ),
-                        );
-                      },
-                    ),
-                  ),
+                  iscombo
+                      ? SizedBox.shrink()
+                      : Positioned(
+                          top: 10,
+                          right: 10,
+                          child: Consumer<WishlistProvider>(
+                            builder: (context, wishlistProvider, child) {
+                              bool isWishlisted =
+                                  wishlistProvider.isWishlisted(id);
+                              bool isLoading = wishlistProvider.isLoading(id);
+                              return GestureDetector(
+                                onTap: () {
+                                  wishlistProvider.toggleWishlist(
+                                      id, varientid);
+                                },
+                                child: isLoading
+                                    ? const SizedBox(
+                                        width: 24,
+                                        height: 24,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Icon(
+                                        isWishlisted
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: isWishlisted
+                                            ? Colors.red
+                                            : Colors.white,
+                                      ),
+                              );
+                            },
+                          ),
+                        ),
                 ],
               ),
               Padding(
@@ -277,7 +287,8 @@ class ProductCard extends StatelessWidget {
                     if (productWeight != "1")
                       Text(
                         productWeight,
-                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     const SizedBox(height: 6),
                     Row(
@@ -291,17 +302,19 @@ class ProductCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
+                        originalPrice !=0
+                      ?  Text(
                           '₹$originalPrice',
                           style: const TextStyle(
                             color: Colors.grey,
                             decoration: TextDecoration.lineThrough,
                             fontSize: 12,
                           ),
-                        ),
+                        ): SizedBox.shrink(),
                         if (offer != 0)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: Colors.green.withOpacity(0.1),

@@ -22,7 +22,7 @@ Widget buildAnimatedIconButton(IconData icon,
             if (badge != null && badge != "0")
             
               Positioned(
-                right: 5,
+                right: 0,
                 top: 0,
                 child: Container(
                   padding: const EdgeInsets.all(6),

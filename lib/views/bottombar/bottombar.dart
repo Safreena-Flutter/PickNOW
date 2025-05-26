@@ -9,6 +9,7 @@ import 'package:picknow/views/wishlist/wishlist.dart';
 import 'package:provider/provider.dart';
 import '../../core/costants/theme/appcolors.dart';
 import '../../providers/cart/cart_provider.dart';
+import '../../providers/whishlist/whishlist_provider.dart';
 import '../cart/my_cart.dart';
 import '../category/categories_view.dart';
 import '../category/widget/category_iconwidget.dart';
@@ -30,10 +31,16 @@ class _BottomBarState extends State<BottomBar> {
   String _currentAddress = "Fetch address";
   bool _isLoading = false;
   final LocationService _locationService = LocationService();
+
   @override
   void initState() {
     super.initState();
     _fetchLocation();
+    // Load cart and wishlist data
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<CartProvider>(context, listen: false).loadCart();
+      Provider.of<WishlistProvider>(context, listen: false).loadWishlist();
+    });
   }
 
   Future<void> _fetchLocation() async {
@@ -122,25 +129,27 @@ class _BottomBarState extends State<BottomBar> {
                                       builder: (_, cart, __) =>
                                           buildAnimatedIconButton(
                                         Icons.shopping_cart_outlined,
-                                        badge: cart.itemCount.toString(),
+                                        badge: cart.cart?.items.length.toString() ?? '0',
                                         onPressed: () {
                                           PageNavigations().push(
                                               ShoppingCart(isfromhome: true));
                                         },
                                       ),
                                     ),
-                                    buildAnimatedIconButton(
-                                      Icons.favorite_border,
-                                      // badge: '3',
-                                      onPressed: () {
-                                        PageNavigations()
-                                            .push(WishlistScreen());
-                                      },
+                                    Consumer<WishlistProvider>(
+                                      builder: (_, wishlist, __) =>
+                                          buildAnimatedIconButton(
+                                        Icons.favorite_border,
+                                        badge: wishlist.wishlist.length.toString(),
+                                        onPressed: () {
+                                          PageNavigations()
+                                              .push(WishlistScreen());
+                                        },
+                                      ),
                                     ),
                                     buildAnimatedIconButton(
                                       Icons.notifications_none_outlined,
                                       onPressed: () {},
-                                      // badge: '3',
                                     ),
                                   ],
                                 ),

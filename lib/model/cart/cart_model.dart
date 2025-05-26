@@ -68,7 +68,7 @@ class CartItem {
       quantity: json['quantity'] ?? 1,
       images: (json['product']?['pImage'] as List<dynamic>?)?.cast<String>(),
       stock: json['product']?['pStock'],
-      quantityInfo: json['product']?['pQuantity'],
+      quantityInfo: json['variantValue'],
       tax: json['tax'] ?? 0,
       offer: json['offer'] ?? json['product']?['pOffer'] ?? 0,
       variantType: json['variantType'],

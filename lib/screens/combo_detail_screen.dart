@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
 import 'package:picknow/core/costants/theme/appcolors.dart';
-import 'package:picknow/views/products/detailed_page.dart';
+import 'package:picknow/providers/cart/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../providers/combo_provider.dart';
@@ -22,9 +21,8 @@ class _ComboDetailScreenState extends State<ComboDetailScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<ComboProvider>(context, listen: false)
-            .fetchComboDetails(widget.comboId));
+    Future.microtask(() => Provider.of<ComboProvider>(context, listen: false)
+        .fetchComboDetails(widget.comboId));
   }
 
   @override
@@ -82,7 +80,10 @@ class _ComboDetailScreenState extends State<ComboDetailScreen> {
                           Expanded(
                             child: Text(
                               combo.name,
-                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
@@ -93,7 +94,7 @@ class _ComboDetailScreenState extends State<ComboDetailScreen> {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
+                              color: AppColors.orange,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
@@ -116,16 +117,15 @@ class _ComboDetailScreenState extends State<ComboDetailScreen> {
                               color: Colors.grey[600],
                             ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 20),
 
                       // Products Section
                       Text(
                         'Products in this combo',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                       ),
-                      const SizedBox(height: 16),
                     ],
                   ),
                 ),
@@ -136,13 +136,14 @@ class _ComboDetailScreenState extends State<ComboDetailScreen> {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final product = combo.products[index];
-                    final productDetails = comboProvider.products[product.productId];
+                    final productDetails =
+                        comboProvider.products[product.productId];
 
                     return GestureDetector(
                       onTap: () {
-                        PageNavigations().push(PremiumProductDetailPage(
-                          id: product.productId,
-                        ));
+                        // PageNavigations().push(PremiumProductDetailPage(
+                        //   id: product.productId,
+                        // ));
                       },
                       child: Card(
                         color: AppColors.whiteColor,
@@ -191,7 +192,8 @@ class _ComboDetailScreenState extends State<ComboDetailScreen> {
                                           ),
                                           decoration: BoxDecoration(
                                             color: Colors.grey[200],
-                                            borderRadius: BorderRadius.circular(4),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
                                           ),
                                           child: Text(
                                             product.variant.size,
@@ -199,14 +201,6 @@ class _ComboDetailScreenState extends State<ComboDetailScreen> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          '₹${product.variant.price}',
-                                          style: TextStyle(
-                                            color: Theme.of(context).primaryColor,
-                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ],
@@ -273,25 +267,67 @@ class _ComboDetailScreenState extends State<ComboDetailScreen> {
                     ],
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Add to cart functionality
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'Add to Cart',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                Expanded(
+                  child: Consumer<CartProvider>(
+                    builder: (context, cartProvider, child) {
+                      final bool inCart = cartProvider.cart?.items.any(
+                              (item) => item.productId == widget.comboId) ??
+                          false;
+
+                      return GestureDetector(
+                        onTap: inCart
+                            ? null
+                            : () {
+                                // cartProvider.addToCart(
+                                //   widget.id,
+                                //   quantity,
+                                //   variant.type,
+                                //   variant.size,
+                                //   variant.price,
+                                //   variant.id,
+                                // );
+                              },
+                        child: Container(
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: inCart
+                                ? Colors.grey.withOpacity(0.3)
+                                : Colors.orange,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: inCart
+                                ? []
+                                : [
+                                    BoxShadow(
+                                      color: Colors.orange.withOpacity(0.3),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                inCart
+                                    ? Icons.check
+                                    : Icons.shopping_cart_outlined,
+                                color: inCart ? Colors.grey : Colors.white,
+                                size: 24,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                inCart ? 'Added to Cart' : 'Add to Cart',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: inCart ? Colors.grey : Colors.white,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -411,4 +447,4 @@ class _ComboDetailScreenState extends State<ComboDetailScreen> {
       ),
     );
   }
-} 
+}

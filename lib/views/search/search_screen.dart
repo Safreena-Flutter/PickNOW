@@ -129,7 +129,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     controller: _scrollController,
                     padding: const EdgeInsets.all(8),
                     itemCount: provider.hasMore
-                        ? provider.searchResults.length 
+                        ? provider.searchResults.length
                         : provider.searchResults.length,
                     itemBuilder: (context, index) {
                       if (index == provider.searchResults.length) {
@@ -159,8 +159,7 @@ class _SearchScreenState extends State<SearchScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => PremiumProductDetailPage(
-               
-id: product.id,
+                id: product.id,
               ),
             ),
           );
