@@ -147,10 +147,10 @@ class _BottomBarState extends State<BottomBar> {
                                         },
                                       ),
                                     ),
-                                    buildAnimatedIconButton(
-                                      Icons.notifications_none_outlined,
-                                      onPressed: () {},
-                                    ),
+                                    // buildAnimatedIconButton(
+                                    //   Icons.notifications_none_outlined,
+                                    //   onPressed: () {},
+                                    // ),
                                   ],
                                 ),
                               ],

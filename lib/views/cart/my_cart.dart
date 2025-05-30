@@ -71,10 +71,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
-    double subtotal = cartProvider.cart?.items.fold<double>(
-            0, (sum, item) => sum + ((item.price ?? 0) * item.quantity)) ??
-        0;
-    double total = subtotal;
+    double total = cartProvider.cart?.finalAmount ?? 0;
     return Scaffold(
       appBar: AppBar(
         leading: widget.isfromhome == true
@@ -102,16 +99,16 @@ class _ShoppingCartState extends State<ShoppingCart> {
                   },
                   icon: Icon(Icons.search)),
               Consumer<WishlistProvider>(
-                                      builder: (_, wishlist, __) =>
-                                          buildAnimatedIconButton(
-                                        Icons.favorite_border,
-                                        badge: wishlist.wishlist.length.toString(),
-                                        onPressed: () {
-                                          PageNavigations()
-                                              .push(WishlistScreen());
-                                        },
-                                      ),
-                                    ),
+                builder: (_, wishlist, __) =>
+                    buildAnimatedIconButton(
+                      Icons.favorite_border,
+                      badge: wishlist.wishlist.length.toString(),
+                      onPressed: () {
+                        PageNavigations()
+                            .push(WishlistScreen());
+                      },
+                    ),
+              ),
             ],
           )
         ],
@@ -177,13 +174,22 @@ class _ShoppingCartState extends State<ShoppingCart> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (subtotal != 0) {
-                      if (currentstep < 2) {
+                    if (cartProvider.cart?.items.isNotEmpty == true) {
+                      if (currentstep == 0) {
                         moveToNextStep();
-                      } else {
+                      } else if (currentstep == 1 && selectedAddress != null) {
+                        moveToNextStep();
+                      } else if (currentstep == 2) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Order placed successfully!'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      } else if (currentstep == 1) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please select an address'),
                             behavior: SnackBarBehavior.floating,
                           ),
                         );
@@ -199,7 +205,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: subtotal == 0 ? Colors.grey : AppColors.orange,
+                      color: cartProvider.cart?.items.isEmpty == true ? Colors.grey : AppColors.orange,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     height: mediaqueryheight(0.06, context),

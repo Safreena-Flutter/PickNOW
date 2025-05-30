@@ -62,21 +62,8 @@ class CartProvider with ChangeNotifier {
       bool success = await _cartService.updateCartItem(
           productid, newQuantity, variantType, variantvalue, price, variantid);
       if (success) {
-        _cart!.items[index] = CartItem(
-          productId: item.productId,
-          name: item.name,
-          price: item.price,
-          quantity: newQuantity,
-          images: item.images,
-          stock: item.stock,
-          quantityInfo: item.quantityInfo,
-          offer: item.offer,
-          tax: item.tax,
-          variantType: variantType,
-          variantValue: variantvalue,
-          variantId: variantid,
-        );
-        notifyListeners();
+        // Reload the cart to get updated totals
+        await loadCart();
       }
     }
   }

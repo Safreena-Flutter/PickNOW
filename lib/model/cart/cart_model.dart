@@ -5,6 +5,9 @@ class CartModel {
   final double totalAmount;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final double platformFee;
+  final double shippingCharges;
+  final double finalAmount;
 
   CartModel({
     required this.id,
@@ -13,6 +16,9 @@ class CartModel {
     required this.totalAmount,
     required this.createdAt,
     required this.updatedAt,
+    this.platformFee = 0,
+    this.shippingCharges = 0,
+    this.finalAmount = 0,
   });
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +31,9 @@ class CartModel {
       totalAmount: (json['totalAmount'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime.now(),
+      platformFee: (json['platformFee'] as num?)?.toDouble() ?? 0.0,
+      shippingCharges: (json['shippingCharges'] as num?)?.toDouble() ?? 0.0,
+      finalAmount: (json['finalAmount'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }
