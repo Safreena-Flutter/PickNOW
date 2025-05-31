@@ -5,11 +5,13 @@ import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/providers/profile/userprofile_provider.dart';
 import 'package:picknow/providers/whishlist/whishlist_provider.dart';
 import 'package:picknow/views/authentication/signin_screen.dart';
+import 'package:picknow/views/profile/aboutus_screen.dart';
 import 'package:picknow/views/profile/edit_profile.dart';
 import 'package:picknow/views/widgets/customsizedbox.dart';
 import 'package:picknow/views/widgets/customtext.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../costants/navigation/navigation.dart';
 import '../../utils/sharedpreference_helper.dart';
@@ -247,6 +249,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: AppColors.grey.withOpacity(0.2)),
                 padding: EdgeInsets.all(8),
                 child: Icon(
+                  Icons.feedback_outlined,
+                  color: AppColors.orange,
+                ),
+              ),
+              title: Text('Feedback'),
+              trailing: Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.grey,
+              ),
+              onTap: () => _sendFeedbackEmail(),
+            ),
+            ListTile(
+              leading: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.grey.withOpacity(0.2)),
+                padding: EdgeInsets.all(8),
+                child: Icon(
                   Icons.info_outline,
                   color: AppColors.orange,
                 ),
@@ -257,10 +277,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: AppColors.grey,
               ),
               onTap: () {
-            
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AboutScreen()),
+                );
               },
             ),
-              ListTile(
+            ListTile(
               leading: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -276,9 +299,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Icons.arrow_forward_ios_rounded,
                 color: AppColors.grey,
               ),
-              onTap: () {
-            
-              },
+              onTap: () => _launchTermsFeed(),
             ),
             // ListTile(
             //   leading: Container(
@@ -355,3 +376,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+
+void _launchTermsFeed() async {
+  final Uri url = Uri.parse(
+      'https://www.termsfeed.com/live/ea151a16-67c6-4131-b2e1-37794bdb7dd9');
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url,
+        mode: LaunchMode.externalApplication); // opens in browser
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+  void _sendFeedbackEmail() async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'support@picknow.com',
+      query: 'subject=App Feedback&body=Hi PickNow Team,%0A%0AI would like to share the following feedback...',
+    );
+
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
+    } else {
+      // fallback or error message
+      debugPrint('Could not launch email app');
+    }
+  }

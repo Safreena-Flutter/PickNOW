@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:picknow/costants/navigation/navigation.dart';
 import 'package:picknow/views/products/detailed_page.dart';
 import '../../../costants/theme/appcolors.dart';
@@ -40,10 +41,28 @@ Widget buildCartContent(CartProvider cartProvider, BuildContext context,
         return const Center(child: CircularProgressIndicator());
       }
       
-      if (cartProvider.cart == null || cartProvider.cart!.items.isEmpty) {
-        return const Center(child: Text('Your cart is empty'));
-      }
-
+     if (cartProvider.cart == null || cartProvider.cart!.items.isEmpty) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Lottie.asset(
+          'assets/animation/cart.json',
+          width: 200,
+          height: 200,
+        ),
+       
+        const Text(
+          'Your cart is empty',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    ),
+  );
+}
       return ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: cartProvider.cart!.items.length + 1, // +1 for summary card

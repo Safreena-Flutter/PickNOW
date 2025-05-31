@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:picknow/costants/navigation/navigation.dart';
 import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/views/products/detailed_page.dart';
@@ -31,7 +32,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppbar(context, 'Whishlist',),
+      appBar: customAppbar(context, 'Wishlist',),
       
       body: Consumer2<WishlistProvider, CartProvider>(
         builder: (context, wishlistProvider, cartProvider, child) {
@@ -40,7 +41,26 @@ class _WishlistScreenState extends State<WishlistScreen> {
           }
 
           if (wishlistProvider.wishlist.isEmpty) {
-            return const Center(child: Text("No items in wishlist"));
+            return  Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Lottie.asset(
+          'assets/animation/cart.json',
+          width: 200,
+          height: 200,
+        ),
+       
+        const Text(
+          'No items in wishlist',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    ),
+  );
           }
 
           return Padding(
