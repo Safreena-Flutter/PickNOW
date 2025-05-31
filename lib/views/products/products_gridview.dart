@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/views/products/detailed_page.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:provider/provider.dart';

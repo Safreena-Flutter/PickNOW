@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/navigation/navigation.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/views/products/detailed_page.dart';
 import 'package:picknow/views/widgets/customappbar.dart';
 import 'package:provider/provider.dart';

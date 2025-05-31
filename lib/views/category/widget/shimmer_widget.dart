@@ -1,6 +1,6 @@
 
   import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/mediaquery/mediaquery.dart';
 import 'package:shimmer/shimmer.dart';
 
 Widget buildShimmerLoading(BuildContext context) {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/providers/cart/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../providers/combo_provider.dart';
+import '../../providers/combo_provider.dart';
 
 class ComboDetailScreen extends StatefulWidget {
   final String comboId;

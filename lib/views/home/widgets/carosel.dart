@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:picknow/core/costants/mediaquery/mediaquery.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/views/widgets/customtext.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

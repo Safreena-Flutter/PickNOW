@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import '../../core/costants/mediaquery/mediaquery.dart';
-import '../../core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import '../widgets/customtext.dart';
 import 'dart:math' as math;
 

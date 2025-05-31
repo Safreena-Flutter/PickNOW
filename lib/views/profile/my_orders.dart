@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/views/profile/orders/all_orders.dart';
 
 class MyOrdersScreen extends StatelessWidget {

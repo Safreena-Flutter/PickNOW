@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/costants/mediaquery/mediaquery.dart';
-import '../../core/costants/navigation/navigation.dart';
-import '../../core/costants/theme/appcolors.dart';
+import '../../costants/mediaquery/mediaquery.dart';
+import '../../costants/navigation/navigation.dart';
+import '../../costants/theme/appcolors.dart';
 import '../../providers/authentication/login_provider.dart';
 import '../widgets/custombutton.dart';
 import '../widgets/customsizedbox.dart';

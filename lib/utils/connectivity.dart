@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import '../costants/theme/appcolors.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 
 class InternetConnectivity with ChangeNotifier {
   bool _isConnected = true;

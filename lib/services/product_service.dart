@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/product_model.dart';
+import '../model/products/product_model.dart';
 
 class ProductService {
   final String baseUrl = 'https://backmern.picknow.in/api';

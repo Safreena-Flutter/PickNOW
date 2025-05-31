@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import '../../core/costants/mediaquery/mediaquery.dart';
-import '../../core/costants/theme/appcolors.dart';
+import '../../costants/mediaquery/mediaquery.dart';
+import '../../costants/theme/appcolors.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final VoidCallback onPressed;

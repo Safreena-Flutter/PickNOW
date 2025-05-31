@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:picknow/views/cart/widget/address_form.dart';
 import 'package:picknow/views/widgets/custombutton.dart';
 import 'package:provider/provider.dart';
-import '../../core/costants/theme/appcolors.dart';
-import '../../core/services/pincode/pincode_service.dart';
+import '../../costants/theme/appcolors.dart';
+import '../../services/pincode/pincode_service.dart';
 import '../../model/address/address.dart';
 import '../../providers/cart/address_provider.dart';
 import '../../providers/profile/userprofile_provider.dart';
@@ -144,7 +144,7 @@ class _AddressScreenState extends State<AddressScreen> {
                     : Column(
                         children: addressProvider.addresses.map((address) {
                           return RadioListTile<String>(
-                            title: Text(address.name ?? ''),
+                           // title: Text(address.name ?? ''),
                             subtitle: Text(
                                 "${address.address}, ${address.city}, ${address.state}, ${address.country} - ${address.pincode}"),
                             value: address.id,

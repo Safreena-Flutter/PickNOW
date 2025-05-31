@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:picknow/providers/profile/userprofile_provider.dart';
 import 'package:picknow/views/widgets/customtext.dart';
 import 'package:provider/provider.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/navigation/navigation.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/views/widgets/custombutton.dart';
 import 'package:picknow/views/widgets/customsizedbox.dart';
 import 'package:picknow/views/widgets/customtextfield.dart';
 
-import '../../core/utils/sharedpreference_helper.dart';
+import '../../utils/sharedpreference_helper.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});

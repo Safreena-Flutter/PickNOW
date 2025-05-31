@@ -1,12 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
+import 'package:picknow/costants/navigation/navigation.dart';
 import 'package:picknow/views/authentication/otpscreen.dart';
 import 'package:picknow/views/authentication/signin_screen.dart';
 import 'package:picknow/views/widgets/customsizedbox.dart';
 import 'package:provider/provider.dart';
-import '../../core/costants/theme/appcolors.dart';
+import '../../costants/theme/appcolors.dart';
 import '../../providers/authentication/register_provider.dart';
 import '../widgets/CustomTextfield.dart';
 import '../widgets/custombutton.dart';

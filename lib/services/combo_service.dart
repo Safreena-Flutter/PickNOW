@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/combo_model.dart';
+import 'package:picknow/model/combo/combo_detail_model.dart';
 
 class ComboService {
   final String baseUrl = 'https://backmern.picknow.in/api';

@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:picknow/core/utils/convert_date.dart';
+import 'package:picknow/utils/convert_date.dart';
 import 'package:picknow/model/products/product_details_model.dart';
 import 'package:picknow/views/products/widget/product_imageview.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +10,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../providers/cart/cart_provider.dart';
 import '../../providers/combo/combo_provider.dart';
 import '../../providers/product/product_detail_provider.dart';
-import '../../core/costants/theme/appcolors.dart';
+import '../../costants/theme/appcolors.dart';
 import '../../providers/product/related_products.dart';
 import '../../providers/reviewproviders/review_provider.dart';
 import '../../providers/whishlist/whishlist_provider.dart';

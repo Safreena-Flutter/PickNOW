@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/costants/theme/appcolors.dart';
+import '../../../costants/theme/appcolors.dart';
 
 class ReviewCard extends StatelessWidget {
   final String username;

@@ -1,6 +1,6 @@
 
   import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 
 Widget buildTextField(String label, TextInputType keyboardType,
       TextEditingController controller,

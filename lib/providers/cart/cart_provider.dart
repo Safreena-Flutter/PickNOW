@@ -57,7 +57,7 @@ class CartProvider with ChangeNotifier {
       String variantid,
       String productid) async {
     if (_cart != null && index >= 0 && index < _cart!.items.length) {
-      final item = _cart!.items[index];
+
 
       bool success = await _cartService.updateCartItem(
           productid, newQuantity, variantType, variantvalue, price, variantid);

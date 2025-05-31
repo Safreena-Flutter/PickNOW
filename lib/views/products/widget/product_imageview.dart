@@ -2,7 +2,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 
 class ProductImageCarousel extends StatefulWidget {
   final List<String> images;

@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/mediaquery/mediaquery.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/navigation/navigation.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/providers/whishlist/whishlist_provider.dart';
 import 'package:picknow/views/category/widget/category_iconwidget.dart';
 import 'package:picknow/views/category/widget/shimmer_widget.dart';

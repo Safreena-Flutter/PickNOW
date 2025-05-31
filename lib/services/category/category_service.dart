@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:picknow/core/costants/api/baseurl.dart';
+import 'package:picknow/costants/api/baseurl.dart';
 import '../../model/category/category_model.dart';
 
 class CategoryService {

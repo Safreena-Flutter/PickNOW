@@ -4,7 +4,7 @@ import 'package:picknow/views/cart/my_cart.dart';
 import 'package:picknow/views/category/widget/category_iconwidget.dart';
 import 'package:picknow/views/search/search_screen.dart';
 import 'package:provider/provider.dart';
-import '../../core/costants/navigation/navigation.dart';
+import '../../costants/navigation/navigation.dart';
 
 AppBar customAppbar(BuildContext context, String? title) {
   return AppBar(

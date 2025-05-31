@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
+import 'package:picknow/costants/navigation/navigation.dart';
 import 'package:picknow/model/address/address.dart';
 import 'package:picknow/providers/cart/order.dart';
 import 'package:picknow/views/bottombar/bottombar.dart';

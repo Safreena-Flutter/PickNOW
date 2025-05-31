@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import '../models/combo_model.dart';
-import '../models/product_model.dart';
+import 'package:picknow/model/combo/combo_detail_model.dart';
+import '../model/products/product_model.dart';
 import '../services/combo_service.dart';
 import '../services/product_service.dart';
 

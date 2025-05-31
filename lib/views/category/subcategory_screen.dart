@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/mediaquery/mediaquery.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
+import 'package:picknow/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/navigation/navigation.dart';
 import 'package:picknow/views/home/widgets/title.dart';
 import 'package:picknow/views/products/gird_view.dart';
 import 'package:picknow/views/widgets/customappbar.dart';

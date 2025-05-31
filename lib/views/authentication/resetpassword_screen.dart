@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:picknow/providers/authentication/login_provider.dart';
 import 'package:provider/provider.dart';
-import '../../core/costants/navigation/navigation.dart';
-import '../../core/costants/theme/appcolors.dart';
+import '../../costants/navigation/navigation.dart';
+import '../../costants/theme/appcolors.dart';
 import '../authentication/signin_screen.dart';
 import '../widgets/custombutton.dart';
 import '../widgets/customsizedbox.dart';

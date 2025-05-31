@@ -5,15 +5,15 @@ import 'package:picknow/providers/whishlist/whishlist_provider.dart';
 import 'package:picknow/views/cart/address.dart';
 import 'package:picknow/views/category/widget/category_iconwidget.dart';
 import 'package:provider/provider.dart';
-import '../../core/costants/navigation/navigation.dart';
+import '../../costants/navigation/navigation.dart';
 import '../../model/address/address.dart';
 import '../../providers/cart/cart_provider.dart';
 import '../search/search_screen.dart';
 import '../wishlist/wishlist.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/views/cart/payment_option.dart';
 import 'package:picknow/views/cart/step.dart';
-import '../../core/costants/mediaquery/mediaquery.dart';
+import '../../costants/mediaquery/mediaquery.dart';
 import '../widgets/customtext.dart';
 import 'widget/cart_widget.dart';
 

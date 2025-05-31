@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:provider/provider.dart';
 import 'package:picknow/views/bottombar/bottombar.dart';
-import '../../core/costants/theme/appcolors.dart';
 import '../../providers/authentication/register_provider.dart';
 import '../widgets/custombutton.dart';
 import '../widgets/customsizedbox.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../model/search_model.dart';
+import '../model/search/search_model.dart';
 
 class SearchService {
   Future<SuggestionsResponse> searchProducts({

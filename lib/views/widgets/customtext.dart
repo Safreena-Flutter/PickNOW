@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/mediaquery/mediaquery.dart';
 
 class CustomText extends StatelessWidget {
   final double size;

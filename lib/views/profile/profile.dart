@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/providers/profile/userprofile_provider.dart';
 import 'package:picknow/providers/whishlist/whishlist_provider.dart';
 import 'package:picknow/views/authentication/signin_screen.dart';
@@ -11,8 +11,8 @@ import 'package:picknow/views/widgets/customtext.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/costants/navigation/navigation.dart';
-import '../../core/utils/sharedpreference_helper.dart';
+import '../../costants/navigation/navigation.dart';
+import '../../utils/sharedpreference_helper.dart';
 import '../../providers/cart/cart_provider.dart';
 import '../cart/address.dart';
 import '../cart/my_cart.dart';
@@ -182,6 +182,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 PageNavigations().push(MyOrdersScreen());
               },
             ),
+            // ListTile(
+            //   leading: Container(
+            //     decoration: BoxDecoration(
+            //         shape: BoxShape.circle,
+            //         color: AppColors.grey.withOpacity(0.2)),
+            //     padding: EdgeInsets.all(8),
+            //     child: Icon(
+            //       Icons.wallet,
+            //       color: AppColors.orange,
+            //     ),
+            //   ),
+            //   title: Text('Payments'),
+            //   trailing: Icon(
+            //     Icons.arrow_forward_ios_rounded,
+            //     color: AppColors.grey,
+            //   ),
+            //   onTap: () {},
+            // ),
             ListTile(
               leading: Container(
                 decoration: BoxDecoration(
@@ -189,25 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: AppColors.grey.withOpacity(0.2)),
                 padding: EdgeInsets.all(8),
                 child: Icon(
-                  Icons.wallet,
-                  color: AppColors.orange,
-                ),
-              ),
-              title: Text('Payments'),
-              trailing: Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: AppColors.grey,
-              ),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.grey.withOpacity(0.2)),
-                padding: EdgeInsets.all(8),
-                child: Icon(
-                  Icons.location_history,
+                  Icons.location_history_outlined,
                   color: AppColors.orange,
                 ),
               ),
@@ -227,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: AppColors.grey.withOpacity(0.2)),
                 padding: EdgeInsets.all(8),
                 child: Icon(
-                  Icons.lock,
+                  Icons.lock_reset_outlined,
                   color: AppColors.orange,
                 ),
               ),
@@ -240,24 +240,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // PageNavigations().push(AddressScreen(widget.address, true, ));
               },
             ),
-            ListTile(
+             ListTile(
               leading: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.grey.withOpacity(0.2)),
                 padding: EdgeInsets.all(8),
                 child: Icon(
-                  Icons.settings,
+                  Icons.info_outline,
                   color: AppColors.orange,
                 ),
               ),
-              title: Text('Settings'),
+              title: Text('About Us'),
               trailing: Icon(
                 Icons.arrow_forward_ios_rounded,
                 color: AppColors.grey,
               ),
-              onTap: () {},
+              onTap: () {
+            
+              },
             ),
+              ListTile(
+              leading: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.grey.withOpacity(0.2)),
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.lock_person_outlined,
+                  color: AppColors.orange,
+                ),
+              ),
+              title: Text('Privacy Policy'),
+              trailing: Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.grey,
+              ),
+              onTap: () {
+            
+              },
+            ),
+            // ListTile(
+            //   leading: Container(
+            //     decoration: BoxDecoration(
+            //         shape: BoxShape.circle,
+            //         color: AppColors.grey.withOpacity(0.2)),
+            //     padding: EdgeInsets.all(8),
+            //     child: Icon(
+            //       Icons.settings,
+            //       color: AppColors.orange,
+            //     ),
+            //   ),
+            //   title: Text('Settings'),
+            //   trailing: Icon(
+            //     Icons.arrow_forward_ios_rounded,
+            //     color: AppColors.grey,
+            //   ),
+            //   onTap: () {},
+            // ),
             ListTile(
               leading: Container(
                 decoration: BoxDecoration(

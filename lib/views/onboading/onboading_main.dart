@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
 import 'package:picknow/views/authentication/signin_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../core/costants/theme/appcolors.dart';
 import '../widgets/customtext.dart';
 import 'intro_screen1.dart';
 import 'intro_screen2.dart';

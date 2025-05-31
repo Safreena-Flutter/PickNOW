@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:picknow/core/utils/connectivity.dart';
+import 'package:picknow/utils/connectivity.dart';
 import 'package:picknow/providers/authentication/login_provider.dart';
 import 'package:picknow/providers/authentication/register_provider.dart';
 import 'package:picknow/providers/cart/order.dart';
@@ -15,7 +15,7 @@ import 'package:picknow/providers/search/search_provider.dart';
 import 'package:picknow/views/bottombar/bottombar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'core/costants/navigation/navigation.dart';
+import 'costants/navigation/navigation.dart';
 import 'providers/cart/address_provider.dart';
 import 'providers/cart/cart_provider.dart';
 import 'providers/category/all_category.dart';

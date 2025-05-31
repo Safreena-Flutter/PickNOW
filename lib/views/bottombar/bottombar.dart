@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:picknow/core/costants/mediaquery/mediaquery.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
+import 'package:picknow/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/navigation/navigation.dart';
 import 'package:picknow/views/address/current_address.dart';
 import 'package:picknow/views/wishlist/wishlist.dart';
 import 'package:provider/provider.dart';
-import '../../core/costants/theme/appcolors.dart';
+import '../../costants/theme/appcolors.dart';
 import '../../providers/cart/cart_provider.dart';
 import '../../providers/whishlist/whishlist_provider.dart';
 import '../cart/my_cart.dart';
@@ -180,7 +180,7 @@ class _BottomBarState extends State<BottomBar> {
                               "assets/images/logo.png",
                               height: 45,
                               width: 45,
-                              fit: BoxFit.cover,
+                             
                             ),
                             backgroundColor:
                                 WidgetStateProperty.all(Colors.white),

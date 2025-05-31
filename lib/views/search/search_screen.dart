@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:shimmer/shimmer.dart';
-import '../../core/costants/mediaquery/mediaquery.dart';
-import '../../core/costants/navigation/navigation.dart';
-import '../../core/costants/theme/appcolors.dart';
+import '../../costants/mediaquery/mediaquery.dart';
+import '../../costants/navigation/navigation.dart';
+import '../../costants/theme/appcolors.dart';
 import '../../providers/search/search_provider.dart';
 import '../products/detailed_page.dart';
 

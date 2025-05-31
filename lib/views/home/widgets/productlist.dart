@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/navigation/navigation.dart';
-import 'package:picknow/screens/combo_detail_screen.dart';
+import 'package:picknow/costants/navigation/navigation.dart';
+import 'package:picknow/views/combo/combo_detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../providers/whishlist/whishlist_provider.dart';

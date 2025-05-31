@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:picknow/core/costants/theme/appcolors.dart';
-
-import '../../../core/costants/mediaquery/mediaquery.dart';
+import 'package:picknow/costants/theme/appcolors.dart';
+import '../../../costants/mediaquery/mediaquery.dart';
 
 class VendorsList extends StatelessWidget {
   final List<Map<String, dynamic>> products;
