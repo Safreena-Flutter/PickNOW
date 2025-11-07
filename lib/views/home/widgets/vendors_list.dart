@@ -10,7 +10,7 @@ class VendorsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: mediaqueryheight(0.3, context),
+      height: mediaqueryheight(0.2, context),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -43,11 +43,11 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 4),
-      width: mediaquerywidth(0.5, context),
+      width: mediaquerywidth(0.4, context),
       child: GestureDetector(
         onTap: onTap,
         child: Card(
-          color: AppColors.whiteColor,
+          color: AppColors.orange,
           elevation: 6,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -57,22 +57,13 @@ class ProductCard extends StatelessWidget {
             children: [
               ClipRRect(
                  borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  imageUrl,
-                  height: mediaqueryheight(0.24, context),
-                  width: mediaquerywidth(0.5, context),
+                child: Image.asset(
+                  "assets/images/img$imageUrl.png",
+                  color: AppColors.grey,
+                  height: mediaqueryheight(0.13, context),
+                  width: mediaquerywidth(0.28, context),
                   fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    return loadingProgress == null
-                        ? child
-                        : Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          );
-                  },
+                
                 ),
               ),
               Padding(

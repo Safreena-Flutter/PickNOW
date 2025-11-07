@@ -11,10 +11,6 @@ class AddressService {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
-
-      if (token == null) {
-        throw Exception("No authentication token found.");
-      }
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -41,10 +37,6 @@ class AddressService {
   Future<AddressModel> fetchAddresses() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth_token');
-
-    if (token == null) {
-      throw Exception("No authentication token found.");
-    }
     final response = await http.get(
       Uri.parse(baseUrl),
       headers: {

@@ -125,7 +125,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: MediaQuery.of(context).size.width * 0.45,
                         decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(8)),
                         ),
                       ),
                       Padding(
@@ -344,33 +345,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   CustomSizedBoxHeight(0.02),
                   Padding(
                     padding: const EdgeInsets.only(left: 16, bottom: 8),
-                    child: buildSectionTitle('Our Sellers'),
+                    child: buildSectionTitle('Why PickNow Products ?'),
                   ),
                   VendorsList(products: [
                     {
                       'name': 'IHA',
-                      'imageUrl':
-                          'https://assets.zenn.com/strapi_assets/Organic_food_logo_1699547c2d.png',
+                      'imageUrl': '1',
                     },
                     {
                       'name': 'Dhaanyas',
-                      'imageUrl':
-                          'https://marketplace.canva.com/EAFzZi-J0-E/1/0/1600w/canva-green-vintage-agriculture-and-farming-logo--T6aMcjxDtw.jpg',
+                      'imageUrl': '2',
                     },
                     {
                       'name': "Millets 'n' minutes",
-                      'imageUrl':
-                          'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/organic-food-logo-design-template-a6555fa7f226417cf106138a0ce83c2b_screen.jpg?ts=1676219912',
+                      'imageUrl': '3',
                     },
                     {
                       'name': "N BITEZ",
-                      'imageUrl':
-                          'https://t3.ftcdn.net/jpg/05/76/56/86/360_F_576568694_q7D3VHOFv9p9BB3ahbBXUNodr4oxPsGh.jpg',
-                    },
-                    {
-                      'name': "Dhana food products",
-                      'imageUrl':
-                          'https://images.vexels.com/media/users/3/174183/raw/341bac228d173b78d5a523c6d1e1c597-organic-market-logo-template.jpg',
+                      'imageUrl': '4',
                     },
                   ]),
                   CustomSizedBoxHeight(0.02),

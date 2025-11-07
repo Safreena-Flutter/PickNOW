@@ -16,10 +16,6 @@ class CartService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth_token');
 
-    if (token == null) {
-      throw Exception("No authentication token found.");
-    }
-
     final url = Uri.parse("$baseUrl/add");
     final response = await http.post(
       url,
@@ -49,10 +45,6 @@ class CartService {
   Future<CartModel?> fetchCartItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth_token');
-
-    if (token == null) {
-      throw Exception("No authentication token found.");
-    }
     print('####token $token');
     final response = await http.get(
       Uri.parse('$baseUrl/get'),
@@ -77,10 +69,6 @@ class CartService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth_token');
 
-    if (token == null) {
-      throw Exception("No authentication token found.");
-    }
-
     final response = await http.put(
       Uri.parse("$baseUrl/update"),
       headers: {
@@ -104,10 +92,6 @@ class CartService {
       String variantType, String variantvalue) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth_token');
-
-    if (token == null) {
-      throw Exception("No authentication token found.");
-    }
 
     final queryParams = {
       'productId': productId,

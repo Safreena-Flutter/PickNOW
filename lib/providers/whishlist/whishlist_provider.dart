@@ -47,10 +47,6 @@ class WishlistProvider extends ChangeNotifier {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      if (token == null) {
-        throw Exception("No authentication token found.");
-      }
-
       final url = Uri.parse("https://backmern.picknow.in/api/user/wishlist/$productId");
       final response = await http.post(
         url,
@@ -96,10 +92,6 @@ class WishlistProvider extends ChangeNotifier {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
-
-      if (token == null) {
-        throw Exception("No authentication token found.");
-      }
 
       final url = Uri.parse("https://backmern.picknow.in/api/user/wishlist/$productId");
       final response = await http.delete(

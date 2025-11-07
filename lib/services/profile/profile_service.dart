@@ -11,10 +11,6 @@ class ProfileService {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
-
-      if (token == null) {
-        throw Exception("No authentication token found.");
-      }
 debugPrint('token $token');
       final response = await http.get(
         Uri.parse(profileUrl),
@@ -40,10 +36,6 @@ debugPrint('token $token');
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
-
-      if (token == null) {
-        throw Exception("No authentication token found.");
-      }
 
       final response = await http.put(
         Uri.parse(updateProfileUrl),

@@ -89,13 +89,11 @@ void _changeProfileImage() async {
       },
     );
 
-    if (selectedImage != null) {
-      setState(() {
-        profileImage = selectedImage;
-      });
-      await SharedPrefsHelper.saveProfileImage(selectedImage);
+    setState(() {
+      profileImage = selectedImage!;
+    });
+    await SharedPrefsHelper.saveProfileImage(selectedImage!);
     }
-  }
      
     
     

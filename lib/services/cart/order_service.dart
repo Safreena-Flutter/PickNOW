@@ -10,10 +10,6 @@ class OrderService {
     final url = Uri.parse('$baseUrl/order/order/cart');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth_token');
-
-    if (token == null) {
-      throw Exception("No authentication token found.");
-    }
     final body = {
       "shippingAddress": {
         "street": address.street,

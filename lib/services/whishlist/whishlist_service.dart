@@ -11,10 +11,6 @@ class WishlistService {
   Future<List<WishlistProduct>> fetchWishlist() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth_token');
-
-    if (token == null) {
-      throw Exception("No authentication token found.");
-    }
     print('tokeenn $token');
     try {
       final response = await http.get(

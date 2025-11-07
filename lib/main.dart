@@ -24,7 +24,6 @@ import 'providers/combo/combo_provider.dart';
 import 'providers/product/related_products.dart';
 import 'providers/reviewproviders/review_provider.dart';
 import 'providers/whishlist/whishlist_provider.dart';
-import 'views/onboading/onboading_main.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -56,7 +55,7 @@ class _MyAppState extends State<MyApp> {
     String? token = prefs.getString('auth_token');
 
     setState(() {
-      _initialScreen = token != null ? BottomBar() : OnboardingScreen();
+      _initialScreen = BottomBar();
     });
 
     FlutterNativeSplash.remove();
