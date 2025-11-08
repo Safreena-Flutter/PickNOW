@@ -348,24 +348,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: buildSectionTitle('Why PickNow Products ?'),
                   ),
                   VendorsList(products: [
+                       {
+                      'name': "100% Natural & Organic",
+                      'imageUrl': '4',
+                    },
                     {
-                      'name': 'IHA',
+                      'name': 'Flavorful & Nourishing',
                       'imageUrl': '1',
                     },
                     {
-                      'name': 'Dhaanyas',
+                      'name': 'Health and Wellness Focus',
                       'imageUrl': '2',
                     },
                     {
-                      'name': "Millets 'n' minutes",
+                      'name': "Trusted & Loved",
                       'imageUrl': '3',
                     },
-                    {
-                      'name': "N BITEZ",
-                      'imageUrl': '4',
-                    },
+                 
                   ]),
-                  CustomSizedBoxHeight(0.02),
+                  CustomSizedBoxHeight(0.01),
                 ],
               ),
             ),
