@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:picknow/providers/brand/brand_provider.dart';
 import 'package:picknow/utils/connectivity.dart';
 import 'package:picknow/providers/authentication/login_provider.dart';
 import 'package:picknow/providers/authentication/register_provider.dart';
@@ -14,7 +15,7 @@ import 'package:picknow/providers/profile/userprofile_provider.dart';
 import 'package:picknow/providers/search/search_provider.dart';
 import 'package:picknow/views/bottombar/bottombar.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'costants/navigation/navigation.dart';
 import 'providers/cart/address_provider.dart';
 import 'providers/cart/cart_provider.dart';
@@ -51,8 +52,8 @@ class _MyAppState extends State<MyApp> {
   void initialization() async {
     await Future.delayed(const Duration(seconds: 3));
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('auth_token');
+   // SharedPreferences prefs = await SharedPreferences.getInstance();
+   // String? token = prefs.getString('auth_token');
 
     setState(() {
       _initialScreen = BottomBar();
@@ -81,6 +82,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
         ChangeNotifierProvider(create: (_) => AddressProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => BrandProvider()),
         ChangeNotifierProvider(create: (_) => OfferProvider()),
         ChangeNotifierProvider(create: (_) => LatestProductProvider()),
         ChangeNotifierProvider(

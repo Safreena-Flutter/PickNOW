@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:picknow/costants/theme/appcolors.dart';
 import '../../../costants/mediaquery/mediaquery.dart';
 
-class VendorsList extends StatelessWidget {
+class InfoList extends StatelessWidget {
   final List<Map<String, dynamic>> products;
 
-  const VendorsList({super.key, required this.products});
+  const InfoList({super.key, required this.products});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,6 @@ class ProductCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(18.0),
               child: Image.asset(
-                
                 "assets/images/img$imageUrl.png",
                 height: mediaqueryheight(0.09, context),
                 width: mediaquerywidth(0.2, context),
@@ -74,6 +73,70 @@ class ProductCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class VendorsList extends StatelessWidget {
+  final List<Map<String, dynamic>> products;
+
+  const VendorsList({super.key, required this.products});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: mediaqueryheight(0.13, context),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final product = products[index];
+          return VendorProductCard(
+            productName: product['name'],
+            imageUrl: product['imageUrl'],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class VendorProductCard extends StatelessWidget {
+  final String productName;
+  final String imageUrl;
+
+  const VendorProductCard({
+    super.key,
+    required this.productName,
+    required this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return  Column(
+        children: [
+          Image.network(
+            imageUrl,
+            height: mediaqueryheight(0.09, context),
+            width: mediaquerywidth(0.2, context),
+          ),
+          SizedBox(
+            width: mediaquerywidth(0.4, context),
+            child: Text(
+              productName,
+              style: const TextStyle(
+                color: AppColors.grey,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      
     );
   }
 }

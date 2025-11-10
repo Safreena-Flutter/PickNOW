@@ -10,10 +10,11 @@ import 'package:picknow/views/home/widgets/vendors_list.dart';
 import 'package:picknow/views/widgets/customsizedbox.dart';
 import 'package:provider/provider.dart';
 //import 'package:video_player/video_player.dart';
-import 'package:shimmer/shimmer.dart';
+import '../../providers/brand/brand_provider.dart';
 import '../../providers/category/all_category.dart';
 import '../../providers/combo/combo_provider.dart';
 import 'widgets/category_widget.dart';
+import 'widgets/shimmer_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<CategoryProvider>(context, listen: false).fetchCategories();
       Provider.of<OfferProvider>(context, listen: false).fetchOfferProducts();
+      Provider.of<BrandProvider>(context, listen: false).fetchBrands();
       Provider.of<LatestProductProvider>(context, listen: false)
           .fetchLatestProducts();
       context.read<ComboListProvider>().comboProducts(refresh: true);
@@ -85,119 +87,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  Widget _buildShimmerSection() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Shimmer for section title
-          Container(
-            width: 150,
-            height: 24,
-            margin: const EdgeInsets.only(left: 16, bottom: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          // Shimmer for product list
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.34,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return Container(
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  margin: const EdgeInsets.symmetric(horizontal: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.withOpacity(0.2)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Shimmer for product image
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.45,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(8)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Shimmer for product name
-                            Container(
-                              width: double.infinity,
-                              height: 16,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            // Shimmer for weight
-                            Container(
-                              width: 60,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            // Shimmer for price row
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: 60,
-                                  height: 14,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                                Container(
-                                  width: 40,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                                Container(
-                                  width: 50,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context, comboProvider, child) {
                       if (comboProvider.isLoading &&
                           comboProvider.products.isEmpty) {
-                        return _buildShimmerSection();
+                        return buildShimmerSection(context);
                       }
 
                       if (comboProvider.error != null) {
@@ -229,23 +118,37 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text('Error: ${comboProvider.error}'));
                       }
 
+                      if (comboProvider.products.isEmpty) {
+                        return const Center(
+                            child: Text('No combo products available'));
+                      }
+
                       return FeaturedProductsList(
-                        from: true,
-                        products: comboProvider.products
-                            .map((combo) => {
-                                  'id': combo.id,
-                                  'offer': combo.ccOffer,
-                                  'name': combo.ccName,
-                                  'weight': combo.ccQuantity.toString(),
-                                  'price': combo.ccPrice,
-                                  'originalPrice': 0,
-                                  'imageUrl': combo.ccImage,
-                                  "varientid": combo.id
-                                })
-                            .toList(),
+                        from: false,
+                        products: comboProvider.products.map((combo) {
+                          // Safely extract variant and weight
+                          final variant = (combo.variants.isNotEmpty)
+                              ? combo.variants.first
+                              : null;
+                          final weight = variant?.size ?? variant?.size ?? '';
+
+                          return {
+                            'id': combo.id,
+                            'offer': int.tryParse(combo.pOffer.toString()) ?? 0,
+                            'name': combo.pName,
+                            'weight': weight,
+                            'price': variant?.price ?? 0,
+                            'originalPrice': variant?.previousPrice ?? 0,
+                            'imageUrl': (combo.pImage.isNotEmpty)
+                                ? combo.pImage.first
+                                : (combo.pImage),
+                            'varientid': variant?.id ?? '',
+                          };
+                        }).toList(),
                       );
                     },
                   ),
+
                   CustomSizedBoxHeight(0.02),
                   Padding(
                     padding: const EdgeInsets.only(left: 16, bottom: 8),
@@ -255,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context, offerProvider, child) {
                       if (offerProvider.isLoading &&
                           offerProvider.products.isEmpty) {
-                        return _buildShimmerSection();
+                        return buildShimmerSection(context);
                       }
 
                       if (offerProvider.error != null) {
@@ -306,6 +209,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   //             ),
                   //           ])),
                   // ),
+
+                  CustomSizedBoxHeight(0.02),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, bottom: 8),
+                    child: buildSectionTitle('Top Brands'),
+                  ),
+                  Consumer<BrandProvider>(
+                    builder: (context, brandProvider, child) {
+                      if (brandProvider.isLoading) {
+                        return buildShimmerSection(context);
+                      }
+                      if (brandProvider.error != null) {
+                        return Center(
+                            child: Text('Error: ${brandProvider.error}'));
+                      }
+
+                      final products = brandProvider.brands
+                          .map((brand) => {
+                                'name': brand.name,
+                                'imageUrl': brand.logo,
+                              })
+                          .toList();
+
+                      return VendorsList(products: products);
+                    },
+                  ),
                   CustomSizedBoxHeight(0.02),
                   Padding(
                     padding: const EdgeInsets.only(left: 16, bottom: 8),
@@ -315,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context, latestProvider, child) {
                       if (latestProvider.isLoading &&
                           latestProvider.products.isEmpty) {
-                        return _buildShimmerSection();
+                        return buildShimmerSection(context);
                       }
 
                       if (latestProvider.error != null) {
@@ -347,8 +276,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(left: 16, bottom: 8),
                     child: buildSectionTitle('Why PickNow Products ?'),
                   ),
-                  VendorsList(products: [
-                       {
+                  InfoList(products: [
+                    {
                       'name': "100% Natural & Organic",
                       'imageUrl': '4',
                     },
@@ -364,7 +293,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       'name': "Trusted & Loved",
                       'imageUrl': '3',
                     },
-                 
                   ]),
                   CustomSizedBoxHeight(0.01),
                 ],
