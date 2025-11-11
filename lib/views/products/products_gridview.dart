@@ -78,7 +78,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                       : MediaQuery.of(context).size.width > 800
                           ? 3
                           : 2,
-                  childAspectRatio: 0.68,
+                  childAspectRatio: 0.60,
                   crossAxisSpacing: 6,
                   mainAxisSpacing: 6,
                 ),
@@ -145,7 +145,8 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                           ),
                         ),
                       ),
-                       if ((product.variantDetails?.offer ?? product.pOffer) != 0)
+                      if ((product.variantDetails?.offer ?? product.pOffer) !=
+                          0)
                         Positioned(
                           top: 8,
                           left: 8,
@@ -157,7 +158,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                               '${product.variantDetails?.offer ?? product.pOffer}% OFF',
+                              '${product.variantDetails?.offer ?? product.pOffer}% OFF',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -166,40 +167,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                             ),
                           ),
                         ),
-                      Positioned(
-                          top: 8,
-                          right: 8,
-                          child: Builder(
-                            builder: (context) {
-                              final wishlistProvider = Provider.of<WishlistProvider>(context, listen: false);
-                              bool isWishlisted = wishlistProvider.isWishlisted(product.id);
-                              bool isLoading = wishlistProvider.isLoading(product.id);
-
-                              return GestureDetector(
-                                onTap: () {
-                                  final variantId = product.variantDetails?.id ?? product.id;
-                                  wishlistProvider.toggleWishlist(product.id, variantId);
-                                },
-                                child: isLoading
-                                    ? const SizedBox(
-                                        width: 24,
-                                        height: 24,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Icon(
-                                        isWishlisted
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color: isWishlisted
-                                            ? Colors.red
-                                            : Colors.white,
-                                      ),
-                              );
-                            },
-                          )),
+                   
                     ],
                   ),
                   Padding(
@@ -215,32 +183,16 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                         ),
                         const SizedBox(height: 4),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Rs.${product.variantDetails?.price ?? product.pPrice}',
+                              product.pBrand,
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green[700],
+                                fontSize: 11,
+                                color: Colors.grey,
                               ),
                             ),
-                            if ((product.variantDetails?.previousPrice ?? product.pPreviousPrice) != 0) ...[
-                              const SizedBox(width: 8),
-                              Text(
-                                'Rs.${product.variantDetails?.previousPrice ?? product.pPreviousPrice}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  decoration: TextDecoration.lineThrough,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            // Star Rating Display
+
                             Row(
                               children: List.generate(5, (index) {
                                 double rating = reviewProvider.averageRating;
@@ -261,6 +213,96 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Rs.${product.variantDetails?.price ?? product.pPrice}',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green[700],
+                              ),
+                            ),
+                            if ((product.variantDetails?.previousPrice ??
+                                    product.pPreviousPrice) !=
+                                0) ...[
+                              const SizedBox(width: 8),
+                              Text(
+                                'Rs.${product.variantDetails?.previousPrice ?? product.pPreviousPrice}',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  decoration: TextDecoration.lineThrough,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                                Text(
+                             product.variantDetails?.size ?? '' ,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.orange,width: 1.5),
+                            borderRadius: BorderRadius.circular(8),
+                         
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 26.0,right: 26,top: 5,bottom: 5),
+                            child: Text('Add to cart',style: TextStyle(color: AppColors.darkblue,fontWeight: FontWeight.w600),),
+                          ),
+                         ),
+                           Builder(
+                            builder: (context) {
+                              final wishlistProvider =
+                                  Provider.of<WishlistProvider>(context,
+                                      listen: false);
+                              bool isWishlisted =
+                                  wishlistProvider.isWishlisted(product.id);
+                              bool isLoading =
+                                  wishlistProvider.isLoading(product.id);
+
+                              return GestureDetector(
+                                onTap: () {
+                                  final variantId =
+                                      product.variantDetails?.id ?? product.id;
+                                  wishlistProvider.toggleWishlist(
+                                      product.id, variantId);
+                                },
+                                child: isLoading
+                                    ? const SizedBox(
+                                        width: 25,
+                                        height: 25,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Icon(
+                                        isWishlisted
+                                            ? Icons.favorite
+                                            : Icons.favorite,
+                                            size: 27,
+                                        color: isWishlisted
+                                            ? Colors.red
+                                            : Colors.grey.withOpacity(0.6),
+                                      ),
+                              );
+                            },
+                          ),
+                       ],
+                     )
+                        
                       ],
                     ),
                   ),

@@ -13,8 +13,8 @@ class ProductListService {
       debugPrint('Fetching products from: $url');
       
       final response = await http.get(Uri.parse(url));
-      debugPrint('Response status code: ${response.statusCode}');
-      debugPrint('Response body: ${response.body}');
+      debugPrint('Response status code 33333: ${response.statusCode}');
+      debugPrint('Response body 33333: ${response.body}');
       
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
@@ -30,7 +30,7 @@ class ProductListService {
             try {
               final variantResponse = await http.get(Uri.parse(variantUrl));
               debugPrint('Variant response status: ${variantResponse.statusCode}');
-              debugPrint('Variant response body: ${variantResponse.body}');
+              debugPrint('Variant response body 33333: ${variantResponse.body}');
               
               if (variantResponse.statusCode == 200) {
                 final variantData = json.decode(variantResponse.body);

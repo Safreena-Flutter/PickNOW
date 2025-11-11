@@ -23,40 +23,40 @@ Widget buildCategoriesRow(BuildContext context) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                buildSectionTitle('Categories'),
-                GestureDetector(
-                  onTap: () {
-                    PageNavigations().push(CategoryPage(
-                      isfromhome: true,
-                    ));
-                  },
-                  child: Row(
-                    children: [
-                      Text(
-                        "See All",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.orange,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 12,
-                        color: AppColors.orange,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       buildSectionTitle('Categories'),
+          //       GestureDetector(
+          //         onTap: () {
+          //           PageNavigations().push(CategoryPage(
+          //             isfromhome: true,
+          //           ));
+          //         },
+          //         child: Row(
+          //           children: [
+          //             Text(
+          //               "See All",
+          //               style: TextStyle(
+          //                 fontSize: 14,
+          //                 fontWeight: FontWeight.w600,
+          //                 color: AppColors.orange,
+          //               ),
+          //             ),
+          //             const SizedBox(width: 4),
+          //             Icon(
+          //               Icons.arrow_forward_ios,
+          //               size: 12,
+          //               color: AppColors.orange,
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
    SizedBox(
   height: mediaqueryheight(0.07, context),
   child: ListView.builder(
@@ -78,8 +78,8 @@ Widget buildCategoriesRow(BuildContext context) {
           ));
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          margin: const EdgeInsets.only(right: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical:6),
+          margin: const EdgeInsets.only(right: 8),
           decoration: BoxDecoration(
             color: AppColors.cream.withOpacity(0.5),
             borderRadius: BorderRadius.circular(30),
@@ -122,11 +122,11 @@ Widget buildCategoriesRow(BuildContext context) {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 6),
               Text(
                 category.name,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
               ),

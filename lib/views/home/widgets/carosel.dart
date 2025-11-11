@@ -54,7 +54,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
           carouselController: _carouselController,
           itemCount: carouselItems.length,
           options: CarouselOptions(
-            height: mediaqueryheight(0.3, context),
+            height: mediaqueryheight(0.25, context),
            
             viewportFraction: 1.0,
             initialPage: 0,
@@ -87,7 +87,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
                       )),
                 ),
                 Positioned(
-                    top: 160,
+                    top: 140,
                     left: 20,
                     right: 20,
                     child: CustomText(

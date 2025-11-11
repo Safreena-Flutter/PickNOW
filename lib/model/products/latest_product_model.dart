@@ -69,7 +69,7 @@ class VariantDetails {
   final String size;
   final String type;
   final int price;
-  final int previousPrice;
+  final int? previousPrice; // nullable
   final int offer;
   final int stock;
   final int totalStock;
@@ -81,7 +81,7 @@ class VariantDetails {
     required this.size,
     required this.type,
     required this.price,
-    required this.previousPrice,
+    this.previousPrice, // optional
     required this.offer,
     required this.stock,
     required this.totalStock,
@@ -90,16 +90,31 @@ class VariantDetails {
 
   factory VariantDetails.fromJson(Map<String, dynamic> json) {
     return VariantDetails(
-      id: json['_id'],
-      productId: json['productId'],
-      size: json['size'],
-      type: json['type'],
-      price: json['price'],
-      previousPrice: json['previousPrice'],
-      offer: json['offer'],
-      stock: json['stock'],
-      totalStock: json['totalStock'],
-      status: json['status'],
+      id: json['_id'] ?? '',
+      productId: json['productId'] ?? '',
+      size: json['size'] ?? '',
+      type: json['type'] ?? '',
+      price: json['price'] ?? 0,
+      previousPrice: json['previousPrice'], // can be null
+      offer: json['offer'] ?? 0,
+      stock: json['stock'] ?? 0,
+      totalStock: json['totalStock'] ?? 0,
+      status: json['status'] ?? '',
     );
   }
-} 
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'productId': productId,
+      'size': size,
+      'type': type,
+      'price': price,
+      'previousPrice': previousPrice,
+      'offer': offer,
+      'stock': stock,
+      'totalStock': totalStock,
+      'status': status,
+    };
+  }
+}

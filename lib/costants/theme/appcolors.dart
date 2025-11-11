@@ -10,4 +10,5 @@ class AppColors {
   static const lightgrey = Color.fromARGB(255, 245, 245, 245);
     static const frost = Color(0xFFFDFCFA);
     static const lightgrey2 = Color(0xFFE7E7E7);
+    static const darkblue = Color.fromARGB(255, 11, 59, 133);
 }
