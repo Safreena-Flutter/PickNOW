@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
 
                       return FeaturedProductsList(
-                        from: false,
+                        from: true,
                         products: comboProvider.products.map((combo) {
                           // Safely extract variant and weight
                           final variant = (combo.variants.isNotEmpty)
@@ -143,6 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ? combo.pImage.first
                                 : (combo.pImage),
                             'varientid': variant?.id ?? '',
+                                 'brand' : combo.pBrand 
                           };
                         }).toList(),
                       );
@@ -167,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
 
                       return FeaturedProductsList(
-                        from: false,
+                        from: true,
                         products: offerProvider.products
                             .map((product) => {
                                   'id': product.productId,
@@ -177,7 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'price': product.price,
                                   'originalPrice': product.previousPrice,
                                   'imageUrl': product.pImage.first,
-                                  "varientid": product.variantId
+                                  "varientid": product.variantId,
+                                       'brand' : product.pBrand 
                                 })
                             .toList(),
                       );
@@ -229,6 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           .map((brand) => {
                                 'name': brand.name,
                                 'imageUrl': brand.logo,
+                                'id' : brand.id
                               })
                           .toList();
 
@@ -258,14 +261,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             .where((product) => product.variantDetails != null)
                             .map((product) => {
                                   'id': product.id,
-                                  'offer': product.variantDetails!.offer,
+                                  'offer': product.variantDetails?.offer ??0,
                                   'name': product.pName,
                                   'weight': product.variantDetails!.size,
                                   'price': product.variantDetails!.price,
                                   'originalPrice':
-                                      product.variantDetails!.previousPrice,
+                                      product.variantDetails?.previousPrice ?? 0,
                                   'imageUrl': product.pImage.first,
-                                  "varientid": product.variantDetails!.id
+                                  "varientid": product.variantDetails!.id,
+                                  'brand' : product.pBrand 
                                 })
                             .toList(),
                       );

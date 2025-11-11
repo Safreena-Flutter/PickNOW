@@ -95,7 +95,7 @@ class VariantDetails {
       size: json['size'] ?? '',
       type: json['type'] ?? '',
       price: json['price'] ?? 0,
-      previousPrice: json['previousPrice'], // can be null
+      previousPrice: json['previousPrice'] ?? 0, // can be null
       offer: json['offer'] ?? 0,
       stock: json['stock'] ?? 0,
       totalStock: json['totalStock'] ?? 0,

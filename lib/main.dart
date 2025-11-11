@@ -15,6 +15,7 @@ import 'package:picknow/providers/profile/userprofile_provider.dart';
 import 'package:picknow/providers/search/search_provider.dart';
 import 'package:picknow/views/bottombar/bottombar.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'costants/navigation/navigation.dart';
 import 'providers/cart/address_provider.dart';
@@ -25,6 +26,7 @@ import 'providers/combo/combo_provider.dart';
 import 'providers/product/related_products.dart';
 import 'providers/reviewproviders/review_provider.dart';
 import 'providers/whishlist/whishlist_provider.dart';
+import 'views/onboading/onboading_main.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -52,11 +54,13 @@ class _MyAppState extends State<MyApp> {
   void initialization() async {
     await Future.delayed(const Duration(seconds: 3));
 
-   // SharedPreferences prefs = await SharedPreferences.getInstance();
-   // String? token = prefs.getString('auth_token');
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+   String? token = prefs.getString('auth_token');
 
     setState(() {
-      _initialScreen = BottomBar();
+      _initialScreen = (token != null && token.isNotEmpty)
+          ? const BottomBar()
+          : OnboardingScreen();
     });
 
     FlutterNativeSplash.remove();

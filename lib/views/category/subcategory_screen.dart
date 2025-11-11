@@ -85,6 +85,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       child: GestureDetector(
         onTap: () => PageNavigations().push(Productsview(
           categoryid: subCategory.id,
+          isfromcategory: true,
           name: subCategory.name,
         )),
         child: AnimatedContainer(

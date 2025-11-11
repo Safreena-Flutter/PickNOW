@@ -59,8 +59,8 @@ class VariantDetails {
   final String type;
   final int stock;
   final int price;
-  final int previousPrice;
-  final int offer;
+  final int? previousPrice;
+  final int? offer;
   final String status;
 
   VariantDetails({
@@ -69,8 +69,8 @@ class VariantDetails {
     required this.type,
     required this.stock,
     required this.price,
-    required this.previousPrice,
-    required this.offer,
+    this.previousPrice,
+     this.offer,
     required this.status,
   });
 
@@ -81,8 +81,8 @@ class VariantDetails {
       type: json["type"],
       stock: json["stock"],
       price: json["price"],
-      previousPrice: json["previousPrice"],
-      offer: json["offer"],
+      previousPrice: json["previousPrice"] ?? 0,
+      offer: json["offer"] ?? 0,
       status: json["status"],
     );
   }

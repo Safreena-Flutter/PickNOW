@@ -5,6 +5,7 @@ import 'package:picknow/costants/navigation/navigation.dart';
 import 'package:picknow/views/combo/combo_detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../costants/theme/appcolors.dart';
 import '../../../providers/whishlist/whishlist_provider.dart';
 import '../../products/detailed_page.dart';
 
@@ -16,7 +17,7 @@ class FeaturedProductsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double containerHeight =
-        MediaQuery.of(context).size.height * (from == true ? 0.32 : 0.34);
+        MediaQuery.of(context).size.height * (from == true ? 0.40 : 0.39);
     return SizedBox(
       height: containerHeight,
       child: ListView.builder(
@@ -38,6 +39,7 @@ class FeaturedProductsList extends StatelessWidget {
             originalPrice: product['originalPrice'],
             imageUrl: product['imageUrl'],
             varientid: product['varientid'],
+            brand: product['brand'],
           );
         },
       ),
@@ -150,6 +152,7 @@ class ProductCard extends StatelessWidget {
   final int offer;
   final bool iscombo;
   final String varientid;
+  final String? brand;
 
   const ProductCard({
     super.key,
@@ -162,6 +165,7 @@ class ProductCard extends StatelessWidget {
     required this.imageUrl,
     required this.offer,
     required this.varientid,
+    this.brand,
     this.rating,
     this.reviews,
   });
@@ -201,76 +205,67 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(8)),
-                    child: Image.network(
-                      imageUrl,
-                      height: imageHeight,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            height: imageHeight,
-                            width: double.infinity,
-                            color: Colors.white,
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
+              Stack(children: [
+                ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(8)),
+                  child: Image.network(
+                    imageUrl,
+                    height: imageHeight,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
                           height: imageHeight,
                           width: double.infinity,
-                          color: Colors.grey[200],
-                          child: const Icon(Icons.error_outline),
-                        );
-                      },
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: imageHeight,
+                        width: double.infinity,
+                        color: Colors.grey[200],
+                        child: const Icon(Icons.error_outline),
+                      );
+                    },
+                  ),
+                ),
+                if (offer != 0)
+                  Positioned(
+                    top: 2,
+                    right: 2,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade700,
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15),
+                            blurRadius: 4,
+                            offset: const Offset(1, 2),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        '$offer% OFF',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
                     ),
                   ),
-                  iscombo
-                      ? SizedBox.shrink()
-                      : Positioned(
-                          top: 10,
-                          right: 10,
-                          child: Consumer<WishlistProvider>(
-                            builder: (context, wishlistProvider, child) {
-                              bool isWishlisted =
-                                  wishlistProvider.isWishlisted(id);
-                              bool isLoading = wishlistProvider.isLoading(id);
-                              return GestureDetector(
-                                onTap: () {
-                                  wishlistProvider.toggleWishlist(
-                                      id, varientid);
-                                },
-                                child: isLoading
-                                    ? const SizedBox(
-                                        width: 24,
-                                        height: 24,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Icon(
-                                        isWishlisted
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color: isWishlisted
-                                            ? Colors.red
-                                            : Colors.white,
-                                      ),
-                              );
-                            },
-                          ),
-                        ),
-                ],
-              ),
+              ]),
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
@@ -284,52 +279,107 @@ class ProductCard extends StatelessWidget {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (productWeight != "1")
-                      Text(
-                        productWeight,
-                        style:
-                            const TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (brand!.isNotEmpty)
+                          Text(
+                            brand ?? '',
+                            style: TextStyle(
+                                color: Colors.grey[700], fontSize: 12),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           '₹$price',
-                          style: const TextStyle(
-                            color: Colors.black,
+                          style: TextStyle(
+                            color: Colors.green[800],
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        originalPrice !=0
-                      ?  Text(
-                          '₹$originalPrice',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            decoration: TextDecoration.lineThrough,
-                            fontSize: 12,
-                          ),
-                        ): SizedBox.shrink(),
-                        if (offer != 0)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.green.withOpacity(0.1),
-                            ),
-                            child: Text(
-                              '$offer% Off',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.green[600],
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                        originalPrice != 0
+                            ? Text(
+                                '₹$originalPrice',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  decoration: TextDecoration.lineThrough,
+                                  fontSize: 12,
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                        if (productWeight != "1")
+                          Text(
+                            productWeight,
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
                           ),
                       ],
                     ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: AppColors.orange, width: 1.5),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 26.0, right: 26, top: 5, bottom: 5),
+                            child: Text(
+                              'Add to cart',
+                              style: TextStyle(
+                                  color: AppColors.darkblue,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                        Builder(
+                          builder: (context) {
+                            final wishlistProvider =
+                                Provider.of<WishlistProvider>(context,
+                                    listen: false);
+                            bool isWishlisted =
+                                wishlistProvider.isWishlisted(varientid);
+                            bool isLoading =
+                                wishlistProvider.isLoading(varientid);
+
+                            return GestureDetector(
+                              onTap: () {
+                                final variantId = varientid;
+                                wishlistProvider.toggleWishlist(id, variantId);
+                              },
+                              child: isLoading
+                                  ? const SizedBox(
+                                      width: 25,
+                                      height: 25,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Icon(
+                                      isWishlisted
+                                          ? Icons.favorite
+                                          : Icons.favorite,
+                                      size: 27,
+                                      color: isWishlisted
+                                          ? Colors.red
+                                          : Colors.grey.withOpacity(0.6),
+                                    ),
+                            );
+                          },
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),

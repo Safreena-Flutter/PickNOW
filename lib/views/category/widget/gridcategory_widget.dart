@@ -36,6 +36,7 @@ Widget buildSubCategoryCard(SubCategory subCategory, BuildContext context) {
                   PageNavigations().push(Productsview(
                     categoryid: nestedSub.id,
                     name: nestedSub.name,
+                    isfromcategory: true,
                   ));
                 },
                 child: Column(

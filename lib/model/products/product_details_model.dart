@@ -11,7 +11,7 @@ class ProductDetails {
   factory ProductDetails.fromJson(Map<String, dynamic> json) {
     return ProductDetails(
       success: json['success'] ?? false,
-      product: Product.fromJson(json['product']),
+      product: Product.fromJson(json['product'] ?? {}),
     );
   }
 
@@ -64,23 +64,25 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['_id'],
-      name: json['pName'],
-      shortDescription: json['pShortDescription'],
-      description: json['pDescription'],
-      images: List<String>.from(json['pImage']),
-      status: json['pStatus'],
-      category: json['pCategory'],
-      subCategory: json['pSubCategory'],
-      nestedSubCategory: json['pNestedSubCategory'],
-      previousPrice: json['pPreviousPrice'],
-      offer: json['pOffer'],
-      tax: json['pTax'],
-      brand: json['pBrand'],
-      variants: List<Variant>.from(json['variants'].map((v) => Variant.fromJson(v))),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      variantStats: VariantStats.fromJson(json['variantStats']),
+      id: (json['_id'] ?? '').toString(),
+      name: (json['pName'] ?? '').toString(),
+      shortDescription: (json['pShortDescription'] ?? '').toString(),
+      description: (json['pDescription'] ?? '').toString(),
+      images: (json['pImage'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+      status: (json['pStatus'] ?? '').toString(),
+      category: (json['pCategory'] ?? '').toString(),
+      subCategory: (json['pSubCategory'] ?? '').toString(),
+      nestedSubCategory: (json['pNestedSubCategory'] ?? '').toString(),
+      previousPrice: _asInt(json['pPreviousPrice']),
+      offer: _asInt(json['pOffer']),
+      tax: _asInt(json['pTax']),
+      brand: (json['pBrand'] ?? '').toString(),
+      variants: ((json['variants'] as List?) ?? const [])
+          .map((v) => Variant.fromJson((v as Map?)?.cast<String, dynamic>() ?? {}))
+          .toList(),
+      createdAt: _asDate(json['createdAt']),
+      updatedAt: _asDate(json['updatedAt']),
+      variantStats: VariantStats.fromJson((json['variantStats'] as Map?)?.cast<String, dynamic>() ?? {}),
     );
   }
 
@@ -134,16 +136,16 @@ class Variant {
 
   factory Variant.fromJson(Map<String, dynamic> json) {
     return Variant(
-      id: json['_id'],
-      productId: json['productId'],
-      size: json['size'],
-      type: json['type'],
-      stock: json['stock'],
-      totalStock: json['totalStock'],
-      price: json['price'],
-      previousPrice: json['previousPrice'],
-      offer: json['offer'],
-      status: json['status'],
+      id: (json['_id'] ?? '').toString(),
+      productId: (json['productId'] ?? '').toString(),
+      size: (json['size'] ?? '').toString(),
+      type: (json['type'] ?? '').toString(),
+      stock: _asInt(json['stock']),
+      totalStock: _asInt(json['totalStock']),
+      price: _asInt(json['price']),
+      previousPrice: _asInt(json['previousPrice']),
+      offer: _asInt(json['offer']),
+      status: (json['status'] ?? '').toString(),
     );
   }
 
@@ -180,11 +182,11 @@ class VariantStats {
 
   factory VariantStats.fromJson(Map<String, dynamic> json) {
     return VariantStats(
-      totalVariants: json['totalVariants'],
-      minPrice: json['minPrice'],
-      maxPrice: json['maxPrice'],
-      totalStock: json['totalStock'],
-      hasOutOfStock: json['hasOutOfStock'],
+      totalVariants: _asInt(json['totalVariants']),
+      minPrice: _asInt(json['minPrice']),
+      maxPrice: _asInt(json['maxPrice']),
+      totalStock: _asInt(json['totalStock']),
+      hasOutOfStock: _asBool(json['hasOutOfStock']),
     );
   }
 
@@ -197,4 +199,32 @@ class VariantStats {
       'hasOutOfStock': hasOutOfStock,
     };
   }
+}
+
+int _asInt(dynamic v) {
+  if (v == null) return 0;
+  if (v is int) return v;
+  if (v is double) return v.toInt();
+  if (v is String) return int.tryParse(v) ?? 0;
+  return 0;
+}
+
+bool _asBool(dynamic v) {
+  if (v == null) return false;
+  if (v is bool) return v;
+  if (v is num) return v != 0;
+  if (v is String) {
+    final s = v.toLowerCase();
+    if (s == 'true') return true;
+    if (s == 'false') return false;
+    final n = int.tryParse(s);
+    return (n ?? 0) != 0;
+  }
+  return false;
+}
+
+DateTime _asDate(dynamic v) {
+  if (v == null) return DateTime.fromMillisecondsSinceEpoch(0);
+  if (v is DateTime) return v;
+  return DateTime.tryParse(v.toString()) ?? DateTime.fromMillisecondsSinceEpoch(0);
 }

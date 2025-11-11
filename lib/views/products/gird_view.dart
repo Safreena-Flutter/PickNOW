@@ -5,8 +5,11 @@ import 'package:picknow/views/products/products_gridview.dart';
 
 class Productsview extends StatelessWidget {
   final String name;
-  final String categoryid;
-  const Productsview({super.key, required this.name,required this.categoryid});
+  final String? categoryid;
+  final String? brandId;
+  final bool? isfrombrand;
+final bool? isfromcategory;
+  const Productsview({super.key, required this.name,  this.categoryid, this.brandId,this.isfrombrand,this.isfromcategory});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,10 @@ class Productsview extends StatelessWidget {
           Expanded(
             child: ProductsGridview(
               categoryId: categoryid,
-              isfromcatogory: true,
+              isfromcatogory:isfromcategory,
+              brandId: brandId,
+              categoryname: name,
+              isfrombrand: isfrombrand,
             ),
           ),
         ],

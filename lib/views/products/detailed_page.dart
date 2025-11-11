@@ -71,6 +71,14 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
           return _buildShimmerLoading();
         }
 
+        if (provider.error != null) {
+          return Center(child: Text('Error: ${provider.error}'));
+        }
+
+        if (provider.productDetail == null) {
+          return Center(child: Text('Product not available'));
+        }
+
         final product = provider.productDetail!.product;
         if (!provider.productDetail!.success) {
           return Center(child: Text('Product not found'));
@@ -151,6 +159,7 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                             ),
                           ),
                           SizedBox(width: 10),
+                          if(product.variants.first.previousPrice != 0)
                           Text(
                             '₹${product.variants.first.previousPrice.toString()}',
                             style: TextStyle(
@@ -349,9 +358,10 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                                   'name': product.name,
                                   'weight': product.quantity,
                                   'price': product.price,
-                                  'originalPrice': product.previousPrice,
+                                  'originalPrice': product.previousPrice ,
                                   'imageUrl': product.images.first,
                                   "varientid": variant.id,
+                                  'brand': product.brand
                                 })
                             .toList(),
                       );
@@ -410,7 +420,8 @@ class _PremiumProductDetailPageState extends State<PremiumProductDetailPage>
                       child: IconButton(
                         onPressed: () async {
                           try {
-                            final variant = selectedVariant ?? product.variants.first;
+                            final variant =
+                                selectedVariant ?? product.variants.first;
                             final shareText = '''
 Check out this amazing product on PickNow!
 
@@ -426,7 +437,8 @@ Download PickNow app to view more details and make a purchase!
                             // Show a snackbar or toast message if sharing fails
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Unable to share at this moment. Please try again later.'),
+                                content: Text(
+                                    'Unable to share at this moment. Please try again later.'),
                                 duration: Duration(seconds: 2),
                               ),
                             );

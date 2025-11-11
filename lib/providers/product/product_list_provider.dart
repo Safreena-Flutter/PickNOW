@@ -71,4 +71,26 @@ class ProductListProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+    Future<void> fetchbrandProducts({
+    required String brandId,
+  }) async {
+    _products = [];
+
+    try {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+      final response = await _service.fetchProductbybrand(brandId);
+
+      _products.addAll(response.products);
+
+      _hasMore = response.products.isNotEmpty;
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:picknow/costants/theme/appcolors.dart';
 import '../../../costants/mediaquery/mediaquery.dart';
+import '../../../costants/navigation/navigation.dart';
+import '../../products/gird_view.dart';
 
 class InfoList extends StatelessWidget {
   final List<Map<String, dynamic>> products;
@@ -95,6 +97,7 @@ class VendorsList extends StatelessWidget {
           return VendorProductCard(
             productName: product['name'],
             imageUrl: product['imageUrl'],
+            brandid: product['id'],
           );
         },
       ),
@@ -105,38 +108,46 @@ class VendorsList extends StatelessWidget {
 class VendorProductCard extends StatelessWidget {
   final String productName;
   final String imageUrl;
+  final String brandid;
 
-  const VendorProductCard({
-    super.key,
-    required this.productName,
-    required this.imageUrl,
-  });
+  const VendorProductCard(
+      {super.key,
+      required this.productName,
+      required this.imageUrl,
+      required this.brandid});
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-        children: [
-          Image.network(
-            imageUrl,
-            height: mediaqueryheight(0.09, context),
-            width: mediaquerywidth(0.2, context),
-          ),
-          SizedBox(
-            width: mediaquerywidth(0.4, context),
-            child: Text(
-              productName,
-              style: const TextStyle(
-                color: AppColors.grey,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
+    return GestureDetector(
+        onTap: () {
+          PageNavigations().push(Productsview(
+            isfrombrand: true,
+            name: productName,
+            brandId: brandid,
+          ));
+        },
+        child: Column(
+          children: [
+            Image.network(
+              imageUrl,
+              height: mediaqueryheight(0.09, context),
+              width: mediaquerywidth(0.2, context),
             ),
-          ),
-        ],
-      
-    );
+            SizedBox(
+              width: mediaquerywidth(0.4, context),
+              child: Text(
+                productName,
+                style: const TextStyle(
+                  color: AppColors.grey,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ));
   }
 }
