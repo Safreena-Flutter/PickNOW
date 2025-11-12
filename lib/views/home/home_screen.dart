@@ -268,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'originalPrice':
                                       product.variantDetails?.previousPrice ?? 0,
                                   'imageUrl': product.pImage.first,
-                                  "varientid": product.variantDetails!.id,
+                                  "varientid": product.variantDetails?.id ?? '',
                                   'brand' : product.pBrand 
                                 })
                             .toList(),

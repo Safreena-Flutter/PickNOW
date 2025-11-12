@@ -42,7 +42,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
   void _loadProducts() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print('categoryid ${widget.categoryname}');
-         print('categorybrand ${widget.brandId}');
+      print('categorybrand ${widget.brandId}');
       widget.isfrombrand == true
           ? context
               .read<ProductListProvider>()
@@ -58,15 +58,6 @@ class _ProductsGridviewState extends State<ProductsGridview> {
     });
   }
 
-  // void _onScroll() {
-  //   if (_scrollController.position.pixels ==
-  //       _scrollController.position.maxScrollExtent) {
-  //     context.read<ProductListProvider>().fetchProducts(
-  //           categoryId: widget.categoryId,
-  //         );
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<ProductListProvider>(
@@ -74,12 +65,24 @@ class _ProductsGridviewState extends State<ProductsGridview> {
         if (provider.isLoading && provider.products.isEmpty) {
           return _buildShimmerGrid();
         }
+        final validProducts = provider.products
+            .where((p) => p.variantDetails?.price != null)
+            .toList();
+        if (validProducts.isEmpty) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Text(
+                "No products available",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+            ),
+          );
+        }
 
         return CustomScrollView(
           controller: _scrollController,
-          //  physics: widget.isfromcatogory == true ? AlwaysScrollableScrollPhysics() : NeverScrollableScrollPhysics(), // Disable inner scrolling
-          //    physics: const NeverScrollableScrollPhysics(), // Disable inner scrolling
-          shrinkWrap: true, // Ensures it takes only needed space
+          shrinkWrap: true,
           slivers: [
             SliverPadding(
               padding: const EdgeInsets.all(8.0),
@@ -96,15 +99,10 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    if (index >= provider.products.length) {
-                      return _buildShimmerCard();
-                    }
-                    final product = provider.products[index];
+                    final product = validProducts[index];
                     return _buildProductCard(product);
                   },
-                  childCount: provider.hasMore
-                      ? provider.products.length
-                      : provider.products.length,
+                  childCount: validProducts.length,
                 ),
               ),
             ),
@@ -157,8 +155,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                           ),
                         ),
                       ),
-                      if ((product.variantDetails?.offer ?? product.pOffer) !=
-                          0)
+                      if ((product.variantDetails?.offer) != 0)
                         Positioned(
                           top: 8,
                           left: 8,
@@ -170,7 +167,7 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                              '${product.variantDetails?.offer ?? product.pOffer}% OFF',
+                              '${product.variantDetails?.offer}% OFF',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -203,24 +200,38 @@ class _ProductsGridviewState extends State<ProductsGridview> {
                                 color: Colors.grey,
                               ),
                             ),
-                            Row(
-                              children: List.generate(5, (index) {
-                                double rating = reviewProvider.averageRating;
-                                if (rating == 0.0) {
-                                  return Icon(Icons.star_border,
-                                      color: Colors.amber, size: 16);
-                                } else if (index < rating.floor()) {
-                                  return Icon(Icons.star,
-                                      color: Colors.amber, size: 16);
-                                } else if (index < rating) {
-                                  return Icon(Icons.star_half,
-                                      color: Colors.amber, size: 16);
-                                } else {
-                                  return Icon(Icons.star_border,
-                                      color: Colors.amber, size: 16);
-                                }
-                              }),
-                            ),
+                            if (reviewProvider.totalReviews.toString() != '0')
+                              Row(children: [
+                                Container(
+                                  padding: EdgeInsets.all(1),
+                                  decoration: BoxDecoration(
+                                      color: Colors.green.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(4)),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.star,
+                                          color: Colors.green, size: 10),
+                                      SizedBox(
+                                        width: 1,
+                                      ),
+                                      Text(
+                                        reviewProvider.averageRating.toString(),
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 10,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  '(${reviewProvider.totalReviews.toString()})',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                )
+                              ]),
                           ],
                         ),
                         const SizedBox(height: 4),

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:picknow/model/products/latest_product_model.dart';
 import '../model/products/product_list_model.dart';
 
 class ProductListService {
@@ -130,12 +129,15 @@ class ProductListService {
         final data = json.decode(response.body);
         if (data["success"] == true) {
           final productResponse = ProductResponse.fromJson(data);
-          
+            debugPrint('Fetching variant from:');
           // Fetch variant details for each product
           for (var product in productResponse.products) {
+             
             if (product.variants.isNotEmpty) {
               final variantId = product.variants.first;
+            
               final variantUrl = 'https://backmern.picknow.in/api/variant/$variantId';
+                 debugPrint('Fetching variant from:brand');
               debugPrint('Fetching variant from: $variantUrl');
               
               try {

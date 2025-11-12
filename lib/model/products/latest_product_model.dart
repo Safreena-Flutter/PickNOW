@@ -1,3 +1,5 @@
+import 'package:picknow/model/products/product_list_model.dart';
+
 class LatestProductResponse {
   final bool success;
   final int count;
@@ -60,61 +62,5 @@ class LatestProduct {
       pBrand: json['pBrand'],
       variants: List<String>.from(json['variants']),
     );
-  }
-}
-
-class VariantDetails {
-  final String id;
-  final String productId;
-  final String size;
-  final String type;
-  final int price;
-  final int? previousPrice; // nullable
-  final int offer;
-  final int stock;
-  final int totalStock;
-  final String status;
-
-  VariantDetails({
-    required this.id,
-    required this.productId,
-    required this.size,
-    required this.type,
-    required this.price,
-    this.previousPrice, // optional
-    required this.offer,
-    required this.stock,
-    required this.totalStock,
-    required this.status,
-  });
-
-  factory VariantDetails.fromJson(Map<String, dynamic> json) {
-    return VariantDetails(
-      id: json['_id'] ?? '',
-      productId: json['productId'] ?? '',
-      size: json['size'] ?? '',
-      type: json['type'] ?? '',
-      price: json['price'] ?? 0,
-      previousPrice: json['previousPrice'] ?? 0, // can be null
-      offer: json['offer'] ?? 0,
-      stock: json['stock'] ?? 0,
-      totalStock: json['totalStock'] ?? 0,
-      status: json['status'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'productId': productId,
-      'size': size,
-      'type': type,
-      'price': price,
-      'previousPrice': previousPrice,
-      'offer': offer,
-      'stock': stock,
-      'totalStock': totalStock,
-      'status': status,
-    };
   }
 }

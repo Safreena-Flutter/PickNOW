@@ -1,5 +1,33 @@
 import 'dart:convert';
-import 'product_list_model.dart';
+
+
+class RatingReview {
+  final String review;
+  final String userId;
+  final int rating;
+  final DateTime createdAt;
+  final String id;
+
+  RatingReview({
+    required this.review,
+    required this.userId,
+    required this.rating,
+    required this.createdAt,
+    required this.id,
+  });
+
+  factory RatingReview.fromJson(Map<String, dynamic> json) {
+    return RatingReview(
+      review: json['review'] ?? '',
+      userId: json['user'] ?? '',
+      rating: int.tryParse(json['rating']?.toString() ?? '0') ?? 0,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt']) ?? DateTime.now()
+          : DateTime.now(),
+      id: json['_id'] ?? '',
+    );
+  }
+}
 
 class RelatedProduct {
   final String id;
@@ -19,9 +47,9 @@ class RelatedProduct {
   final int offer;
   final int tax;
   final String status;
-  final String createdBy;
-  final String editedBy;
-  final List<RatingReview>? ratingsReviews;
+  final String? createdBy;
+  final String? editedBy;
+  final List<RatingReview> ratingsReviews;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -43,9 +71,9 @@ class RelatedProduct {
     required this.offer,
     required this.tax,
     required this.status,
-    required this.createdBy,
-    required this.editedBy,
-    this.ratingsReviews,
+    this.createdBy,
+    this.editedBy,
+    required this.ratingsReviews,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -56,29 +84,42 @@ class RelatedProduct {
       name: json['pName'] ?? 'Unknown',
       shortDescription: json['pShortDescription'] ?? '',
       description: json['pDescription'] ?? '',
-      price: json['pPrice'] ?? 0,
-      previousPrice: json['pPreviousPrice'] ?? 0,
-      sold: json['pSold'] ?? 0,
+      price: (json['pPrice'] != null)
+          ? int.tryParse(json['pPrice'].toString()) ?? 0
+          : 0,
+      previousPrice: (json['pPreviousPrice'] != null)
+          ? int.tryParse(json['pPreviousPrice'].toString()) ?? 0
+          : 0,
+      sold: (json['pSold'] != null)
+          ? int.tryParse(json['pSold'].toString()) ?? 0
+          : 0,
       quantity: json['pQuantity'] ?? '',
       category: json['pCategory'] ?? '',
       subCategory: json['pSubCategory'] ?? '',
-      nestedSubCategory: json['pNestedSubCategory'], // nullable
+      nestedSubCategory: json['pNestedSubCategory'],
       stock: json['pStock'] ?? 0,
-      images: (json['pImage'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      images: (json['pImage'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       brand: json['pBrand'] ?? '',
-      offer: (json['pOffer'] != null && json['pOffer'].toString().isNotEmpty)
+      offer: (json['pOffer'] != null)
           ? int.tryParse(json['pOffer'].toString()) ?? 0
           : 0,
-      tax: json['pTax'] ?? 0,
+      tax: (json['pTax'] != null) ? int.tryParse(json['pTax'].toString()) ?? 0 : 0,
       status: json['pStatus'] ?? '',
-      createdBy: json['createdBy'] ?? '',
-      editedBy: json['editedBy'] ?? '',
+      createdBy: json['createdBy'],
+      editedBy: json['editedBy'],
       ratingsReviews: (json['pRatingsReviews'] as List<dynamic>?)
-          ?.map((x) => RatingReview.fromJson(x))
-          .toList() ??
+              ?.map((e) => RatingReview.fromJson(e))
+              .toList() ??
           [],
-      createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) ?? DateTime.now() : DateTime.now(),
-      updatedAt: json['updatedAt'] != null ? DateTime.tryParse(json['updatedAt']) ?? DateTime.now() : DateTime.now(),
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt']) ?? DateTime.now()
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt']) ?? DateTime.now()
+          : DateTime.now(),
     );
   }
 
@@ -104,7 +145,8 @@ class RelatedProductResponse {
     return RelatedProductResponse(
       success: jsonData['success'] ?? false,
       count: jsonData['count'] ?? 0,
-      relatedProducts: RelatedProduct.listFromJson(jsonData['relatedProducts'] as List<dynamic>?),
+      relatedProducts:
+          RelatedProduct.listFromJson(jsonData['relatedProducts'] as List<dynamic>?),
     );
   }
 }

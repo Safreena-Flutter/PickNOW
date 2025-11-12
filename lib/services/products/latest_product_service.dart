@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:picknow/model/products/latest_product_model.dart';
 
+import '../../model/products/product_list_model.dart';
+
 class LatestProductService {
   Future<LatestProductResponse> fetchLatestProducts() async {
     try {

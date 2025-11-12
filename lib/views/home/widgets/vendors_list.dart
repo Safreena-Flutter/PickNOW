@@ -123,7 +123,7 @@ class VendorProductCard extends StatelessWidget {
           PageNavigations().push(Productsview(
             isfrombrand: true,
             name: productName,
-            brandId: brandid,
+            brandId: productName,
           ));
         },
         child: Column(
